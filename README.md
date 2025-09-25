@@ -1,5 +1,3 @@
-
-
 # Business Site – Backend
 
 A Node.js + Express backend for a small business management system.  
@@ -7,7 +5,7 @@ Includes user authentication, role-based authorization, posts management, appoin
 
 ---
 
-## 🚀 Features
+## Features
 - **User Management**  
   - Register new users (default: `client` role).  
   - Login with JWT authentication.  
@@ -27,7 +25,7 @@ Includes user authentication, role-based authorization, posts management, appoin
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 ```
 business-site/
 │── controllers/   # Logic for each resource
@@ -39,7 +37,7 @@ business-site/
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 - Node.js  
 - Express.js  
 - MongoDB + Mongoose  
@@ -47,7 +45,7 @@ business-site/
 
 ---
 
-## 🔑 API Endpoints
+## API Endpoints
 
 ### Users
 - `POST /api/users/register` → Register a new user  
@@ -71,7 +69,7 @@ business-site/
 
 ---
 
-## ▶️ Getting Started
+## Getting Started
 1. Clone the repository:  
    ```bash
    git clone https://github.com/arelraba11/business-site.git
@@ -97,7 +95,7 @@ business-site/
 
 ---
 
-## ✅ Status
+## Status
 All backend functionality tested via `curl`:  
 - User login/register  
 - Post creation/deletion  
