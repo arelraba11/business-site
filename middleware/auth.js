@@ -1,11 +1,6 @@
-// middleware/auth.js
 import jwt from "jsonwebtoken";
 
-/**
- * Authentication middleware
- * Validates JWT token from Authorization header ("Bearer <token>")
- * and attaches decoded user data to req.user
- */
+// Auth middleware: verifies JWT from header and attaches user info to req.user
 export default function auth(req, res, next) {
   try {
     const token = req.header("Authorization")?.replace("Bearer ", "");

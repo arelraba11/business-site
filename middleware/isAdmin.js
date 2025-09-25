@@ -1,7 +1,6 @@
-// Middleware to check if the user has admin privileges
-
+// Check if user is admin
 const isAdmin = (req, res, next) => {
-  // Validate that the user is logged in and has the admin role
+  // Allow only admins
   if (!req.user || req.user.role !== "admin") {
     return res.status(403).json({
       success: false,

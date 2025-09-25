@@ -1,20 +1,21 @@
-
 import Post from "../models/Post.js";
 
-// Create a new post
+// Creates a new post with the logged-in user as author
 const createPost = async (req, res) => {
+  // Extract request body and save new post to DB
   try {
-    const { title, content, author } = req.body;
-    const post = new Post({ title, content, author });
+    const { title, content, image } = req.body;
+    // Author is taken from the logged-in user (via token)
+    const post = new Post({ title, content, image, author: req.user.id });
     await post.save();
     return res.status(201).json({ success: true, data: post });
   } catch (error) {
-    // Handle errors (e.g., validation, database)
+    // Handle DB or validation errors
     return res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// Get all posts
+// Fetch all posts sorted by creation date (newest first)
 const getPosts = async (req, res) => {
   try {
     const posts = await Post.find().sort({ createdAt: -1 });
@@ -24,7 +25,7 @@ const getPosts = async (req, res) => {
   }
 };
 
-// Delete a post by ID
+// Delete post by ID (returns 404 if not found)
 const deletePost = async (req, res) => {
   try {
     const { id } = req.params;

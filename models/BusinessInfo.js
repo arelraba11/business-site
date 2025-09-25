@@ -6,26 +6,26 @@ const businessInfoSchema = new mongoose.Schema({
     required: true
   },
   mainImage: {
-    type: String
+    type: String // URL to the main image representing the business
   },
   socialLinks: {
-    facebook: String,
-    instagram: String,
-    tiktok: String
+    facebook: String, // Facebook page URL
+    instagram: String, // Instagram profile URL
+    tiktok: String // TikTok profile URL
   },
   openingHours: {
     type: Map,
-    of: String 
+    of: String // Map of days to opening hours (e.g., "Monday": "9am-5pm")
   },
   prices: [
     {
-      service: String,
-      price: Number
+      service: String, // Name of the service offered
+      price: Number // Price for the service
     }
   ],
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now // Timestamp of document creation
   }
 });
 

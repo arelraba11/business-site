@@ -5,10 +5,10 @@ import isAdmin from "../middleware/isAdmin.js";
 
 const router = express.Router();
 
-// Fetch the business info
+// GET /business - Retrieve business information
 router.get("/", getBusinessInfo);
 
-// Create or update business info
+// POST /business - Create or update business information (admin only)
 router.post("/", auth, isAdmin, createOrUpdateBusinessInfo);
 
 export default router;

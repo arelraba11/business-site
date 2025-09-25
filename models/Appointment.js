@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
+// Appointment schema defines structure for booking system
 const appointmentSchema = new mongoose.Schema({
+  // Reference to the user who booked the appointment
   client: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -14,11 +16,13 @@ const appointmentSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
+  // Appointment status managed by admin
   status: {
     type: String,
     enum: ["pending", "approved", "rejected"],
     default: "pending"
   },
+  // Optional notes related to appointment
   notes: {
     type: String
   }

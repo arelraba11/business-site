@@ -8,12 +8,12 @@ import businessRoutes from "./routes/business.js";
 import appointmentRoutes from "./routes/appointments.js";
 import postRoutes from "./routes/posts.js";
 
-// Load environment variables
+// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
 
-// Middleware
+// Parse JSON request bodies
 app.use(express.json());
 
 // Routes
@@ -27,7 +27,7 @@ app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
-// MongoDB connection
+// Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");

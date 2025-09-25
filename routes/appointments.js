@@ -9,21 +9,22 @@ import {
   updateAppointmentStatus,
 } from "../controllers/appointmentController.js";
 
+// Routes for appointment-related operations
 const router = express.Router();
 
-// Create new appointment
+// Client creates new appointment
 router.post("/", auth, createAppointment);
 
-// Get appointments of logged-in user
+// Retrieve appointments of logged-in user
 router.get("/my", auth, getMyAppointments);
 
-// Cancel appointment
+// Client cancels their appointment
 router.delete("/:id", auth, deleteAppointment);
 
-// Get all appointments (admin only)
+// Admin retrieves all appointments
 router.get("/", [auth, adminOnly], getAllAppointments);
 
-// Update appointment status (admin only)
+// Admin updates appointment status
 router.patch("/:id", [auth, adminOnly], updateAppointmentStatus);
 
 export default router;

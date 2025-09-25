@@ -1,6 +1,6 @@
 import Appointment from "../models/Appointment.js";
 
-// Create new appointment
+// Create new appointment for the logged-in user
 export const createAppointment = async (req, res) => {
   try {
     const { service, dateTime } = req.body;
@@ -18,7 +18,7 @@ export const createAppointment = async (req, res) => {
   }
 };
 
-// Get appointments of logged-in user
+// Retrieve appointments belonging to the logged-in user
 export const getMyAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({ client: req.user.id }).populate("client", "username email");
@@ -28,13 +28,13 @@ export const getMyAppointments = async (req, res) => {
   }
 };
 
-// Cancel appointment
+// Cancel an appointment if user is owner or admin
 export const deleteAppointment = async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).json({ message: "Appointment not found" });
 
-    // Ensure only the owner (or admin) can cancel
+    // Only the appointment owner or admin can cancel
     if (appointment.client.toString() !== req.user.id && req.user.role !== "admin") {
       return res.status(403).json({ message: "Not authorized to cancel this appointment" });
     }
@@ -46,7 +46,7 @@ export const deleteAppointment = async (req, res) => {
   }
 };
 
-// Get all appointments (admin only)
+// Retrieve all appointments (restricted to admin users)
 export const getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find().populate("client", "username email");
@@ -56,13 +56,14 @@ export const getAllAppointments = async (req, res) => {
   }
 };
 
-// Update appointment status (admin only)
+// Update the status of an appointment (admin only)
 export const updateAppointmentStatus = async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).json({ message: "Appointment not found" });
 
     const { status } = req.body;
+    // Accept only 'approved' or 'rejected' as valid status updates
     if (status === "approved" || status === "rejected") {
       appointment.status = status;
       await appointment.save();
