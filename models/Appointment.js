@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const appointmentSchema = new mongoose.Schema({
   client: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    required: true
   },
   service: {
     type: String,
@@ -15,14 +16,13 @@ const appointmentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "confirmed", "cancelled"],
+    enum: ["pending", "approved", "rejected"],
     default: "pending"
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  notes: {
+    type: String
   }
-});
+}, { timestamps: true });
 
 const Appointment = mongoose.model("Appointment", appointmentSchema);
 export default Appointment;
