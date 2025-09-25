@@ -1,28 +1,34 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import businessRoutes from "./routes/business.js";
+
+// Import route handlers
 import userRoutes from "./routes/users.js";
+import businessRoutes from "./routes/business.js";
+import appointmentRoutes from "./routes/appointments.js";
 
 // Load environment variables
 dotenv.config();
+
 const app = express();
 
-// Middleware to parse JSON bodies
+// Parse JSON request bodies
 app.use(express.json());
 
-// User authentication routes
-app.use("/api/users", userRoutes);
+// API routes
+app.use("/api/users", userRoutes);          // User authentication
+app.use("/api/business", businessRoutes);  // Business information
+app.use("/api/appointments", appointmentRoutes); // Appointments management
 
-// Business info routes
-app.use("/api/business", businessRoutes);
-
-// Basic route to check if server is running
+// Health check route
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
-// Connect to MongoDB and start the server
+// Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => app.listen(4000, () => console.log("Server running on port 4000")))
-  .catch((err) => console.log(err));
+  .then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(4000, () => console.log("Server running on port 4000"));
+  })
+  .catch((err) => console.error("MongoDB connection error:", err));
