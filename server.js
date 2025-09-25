@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import businessRoutes from "./routes/business.js";
+import userRoutes from "./routes/users.js";
 
 // Load environment variables
 dotenv.config();
@@ -9,6 +10,9 @@ const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
+
+// User authentication routes
+app.use("/api/users", userRoutes);
 
 // Business info routes
 app.use("/api/business", businessRoutes);
