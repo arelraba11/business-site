@@ -1,65 +1,17 @@
 import express from "express";
-import Post from "../models/Post.js";
 import auth from "../middleware/auth.js";
 import isAdmin from "../middleware/isAdmin.js";
+import { createPost, getPosts, deletePost } from "../controllers/postController.js";
 
 const router = express.Router();
 
 // Create a new post (auth and admin required)
-router.post("/", auth, isAdmin, async (req, res) => {
-  try {
-    const { content, image } = req.body;
-
-    if (!content) {
-      return res.status(400).json({ success: false, message: "Post content is required." });
-    }
-
-    const post = new Post({
-      content,
-      image,
-      author: req.user.id, // link post to logged-in user
-    });
-
-    await post.save();
-    // Populate author before responding
-    await post.populate("author", "username email");
-    res.status(201).json({
-      success: true,
-      message: "Post created.",
-      post,
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
+router.post("/", auth, isAdmin, createPost);
 
 // Get all posts (public)
-router.get("/", async (req, res) => {
-  try {
-    const posts = await Post.find()
-      .populate("author", "username email")
-      .sort({ createdAt: -1 });
-    res.json({
-      success: true,
-      posts,
-    });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
+router.get("/", getPosts);
 
 // Delete a post (auth and admin required)
-router.delete("/:id", auth, isAdmin, async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-      return res.status(404).json({ success: false, message: "Post not found." });
-    }
-    await post.deleteOne();
-    res.json({ success: true, message: "Post deleted." });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
-  }
-});
+router.delete("/:id", auth, isAdmin, deletePost);
 
 export default router;
