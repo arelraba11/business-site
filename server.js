@@ -2,30 +2,32 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-// Import route handlers
+// Routes
 import userRoutes from "./routes/users.js";
 import businessRoutes from "./routes/business.js";
 import appointmentRoutes from "./routes/appointments.js";
+import postRoutes from "./routes/posts.js";
 
 // Load environment variables
 dotenv.config();
 
 const app = express();
 
-// Parse JSON request bodies
+// Middleware
 app.use(express.json());
 
-// API routes
-app.use("/api/users", userRoutes);          // User authentication
-app.use("/api/business", businessRoutes);  // Business information
-app.use("/api/appointments", appointmentRoutes); // Appointments management
+// Routes
+app.use("/api/users", userRoutes);          // Users (auth)
+app.use("/api/business", businessRoutes);   // Business info
+app.use("/api/appointments", appointmentRoutes); // Appointments
+app.use("/api/posts", postRoutes);          // Posts
 
-// Health check route
+// Health check
 app.get("/", (req, res) => {
   res.send("Server is running!");
 });
 
-// Connect to MongoDB and start server
+// MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log("Connected to MongoDB");

@@ -1,26 +1,24 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: false
-  },
   content: {
     type: String,
-    required: false
+    required: true,
+    trim: true,
   },
-  imageUrl: {
+  image: {
     type: String,
-    required: false
+    default: null,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   }
-});
+}, { timestamps: true });
 
 postSchema.pre("validate", function (next) {
-  if (!this.content && !this.imageUrl) {
+  if (!this.content && !this.image) {
     next(new Error("Post must have either text content or an image."));
   } else {
     next();
