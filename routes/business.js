@@ -1,5 +1,7 @@
 import express from "express";
 import BusinessInfo from "../models/BusinessInfo.js";
+import auth from "../middleware/auth.js";
+import isAdmin from "../middleware/isAdmin.js";
 
 const router = express.Router();
 
@@ -17,7 +19,7 @@ router.get("/", async (req, res) => {
 });
 
 // Create or update the business info
-router.post("/", async (req, res) => {
+router.post("/", auth, isAdmin, async (req, res) => {
   try {
     let info = await BusinessInfo.findOne();
     if (info) {

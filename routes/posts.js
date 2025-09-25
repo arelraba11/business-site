@@ -1,11 +1,12 @@
 import express from "express";
 import Post from "../models/Post.js";
 import auth from "../middleware/auth.js";
+import isAdmin from "../middleware/isAdmin.js";
 
 const router = express.Router();
 
-// Create a new post (auth required)
-router.post("/", auth, async (req, res) => {
+// Create a new post (auth and admin required)
+router.post("/", auth, isAdmin, async (req, res) => {
   try {
     const { content, image } = req.body;
 
@@ -47,15 +48,12 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Delete a post (auth, only author)
-router.delete("/:id", auth, async (req, res) => {
+// Delete a post (auth and admin required)
+router.delete("/:id", auth, isAdmin, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     if (!post) {
       return res.status(404).json({ success: false, message: "Post not found." });
-    }
-    if (req.user.id !== post.author.toString()) {
-      return res.status(403).json({ success: false, message: "Not authorized to delete this post." });
     }
     await post.deleteOne();
     res.json({ success: true, message: "Post deleted." });

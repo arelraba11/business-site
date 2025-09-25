@@ -8,7 +8,7 @@ const router = express.Router();
 // Register new user
 router.post("/register", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, role } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -24,6 +24,7 @@ router.post("/register", async (req, res) => {
       username,
       email,
       password: hashedPassword,
+      role: role || "client",
     });
 
     await newUser.save();
@@ -47,9 +48,11 @@ router.post("/login", async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
     // Generate JWT
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
+    const token = jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+);
 
     res.json({ token, user: { id: user._id, username: user.username, email: user.email } });
   } catch (err) {
