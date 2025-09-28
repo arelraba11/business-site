@@ -1,13 +1,13 @@
-// routes/users.js - User authentication routes
+// routes/users.js - Authentication routes
 import express from "express";
 import { registerUser, loginUser } from "../controllers/userController.js";
 
 const router = express.Router();
 
-// Route to register a new user
+// Register new user
 router.post("/register", registerUser);
 
-// Route to login an existing user
+// Login existing user
 router.post("/login", loginUser);
 
 export default router;

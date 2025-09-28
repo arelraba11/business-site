@@ -4,18 +4,20 @@ import { apiRequest } from "../api";
 import "../styles/Pages.css";
 
 function Register() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  // Form state
+  const [username, setUsername] = useState(""); 
+  const [email, setEmail] = useState("");       
+  const [password, setPassword] = useState(""); 
+  const [error, setError] = useState("");       // Store error message
   const navigate = useNavigate();
 
+  // Handle form submit (register new user)
   async function handleSubmit(e) {
     e.preventDefault();
     try {
       await apiRequest("/users/register", "POST", { username, email, password });
 
-      // Dispatch event in case Navbar listens for auth changes
+      // Notify other components (like Navbar) about auth state changes
       window.dispatchEvent(new Event("authChange"));
 
       alert("Registration successful! Redirecting to login...");
@@ -29,6 +31,7 @@ function Register() {
     <div className="register-container">
       <h2 className="register-title">Register</h2>
       <form className="register-form" onSubmit={handleSubmit}>
+        {/* Username input */}
         <input
           type="text"
           placeholder="Username"
@@ -36,6 +39,7 @@ function Register() {
           onChange={(e) => setUsername(e.target.value)}
           required
         />
+        {/* Email input */}
         <input
           type="email"
           placeholder="Email"
@@ -43,6 +47,7 @@ function Register() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        {/* Password input */}
         <input
           type="password"
           placeholder="Password"
@@ -52,6 +57,7 @@ function Register() {
         />
         <button type="submit" className="btn btn-primary">Register</button>
       </form>
+      {/* Show error if registration fails */}
       {error && <p className="error-message">{error}</p>}
     </div>
   );

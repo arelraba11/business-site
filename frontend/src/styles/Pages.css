@@ -3,13 +3,13 @@
   font-family: var(--font);
   color: var(--color-text);
   padding: 2rem;
-  min-height: 100vh;
+  min-height: 100vh; /* Full height layout */
 }
 
 /* ========== Auth Pages (Login & Register) ========== */
 .login-container,
 .register-container {
-  max-width: 400px;
+  max-width: 400px; /* Centered card layout */
   margin: 4rem auto;
   padding: 2rem;
   background: var(--color-card);
@@ -32,7 +32,7 @@
   gap: 1rem;
 }
 
-/* Login-specific input styles */
+/* Login inputs */
 .login-input {
   padding: 0.8rem;
   border: 1px solid #444;
@@ -41,13 +41,12 @@
   color: var(--color-text);
   font-size: 1rem;
 }
-
 .login-input:focus {
   outline: none;
   border-color: var(--color-accent);
 }
 
-/* Register-specific input styles */
+/* Register inputs */
 .register-form input {
   padding: 0.8rem;
   border: 1px solid #333;
@@ -56,30 +55,13 @@
   color: var(--color-text);
   font-size: 1rem;
 }
-
 .register-form input:focus {
   outline: none;
   border-color: var(--color-accent);
 }
 
-/* Login button styles */
-.login-button {
-  padding: 0.8rem;
-  font-size: 1rem;
-  border: none;
-  border-radius: var(--radius);
-  background: var(--color-accent);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.login-button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-/* Register button styles */
+/* Auth buttons */
+.login-button,
 .register-form button {
   background: var(--color-accent);
   color: var(--color-text);
@@ -90,27 +72,21 @@
   cursor: pointer;
   transition: var(--transition);
 }
-
+.login-button:hover,
 .register-form button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
-/* Login error message */
-.login-error {
-  margin-top: 1rem;
-  color: #e74c3c;
-  font-size: 0.95rem;
-}
-
-/* Register error message */
+/* Error messages */
+.login-error,
 .register-container .error-message {
-  color: #e74c3c;
   margin-top: 1rem;
+  color: #e74c3c;
   font-size: 0.9rem;
 }
 
-/* ========== Appointments Page ========== */
+/* ========== Appointments Page (Booking) ========== */
 .appointments-container {
   max-width: 800px;
   margin: 2rem auto;
@@ -127,12 +103,12 @@
   color: var(--color-accent);
 }
 
+/* Services list for booking */
 .services-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .service-item {
   display: flex;
   justify-content: space-between;
@@ -143,12 +119,10 @@
   margin-bottom: 0.8rem;
   color: var(--color-text);
 }
-
 .service-item:hover {
   background: #2d2d2d;
 }
-
-.select-button {
+.select-button { /* "Select" service button */
   background: var(--color-accent);
   border: none;
   border-radius: var(--radius);
@@ -157,12 +131,12 @@
   color: var(--color-text);
   transition: var(--transition);
 }
-
 .select-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
+/* Selected service form */
 .selected-service-card {
   margin-top: 2rem;
   padding: 1.5rem;
@@ -170,30 +144,11 @@
   border-radius: var(--radius);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-
-.selected-service-title {
-  color: var(--color-accent);
-  margin-bottom: 0.8rem;
-}
-
-.selected-service-info {
-  margin-bottom: 1.2rem;
-}
-
 .date-time-form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
-
-.date-time-form label {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-size: 0.9rem;
-  color: var(--color-text);
-}
-
 .date-time-form input {
   margin-top: 0.3rem;
   padding: 0.6rem;
@@ -202,8 +157,7 @@
   background: #2b2b2b;
   color: var(--color-text);
 }
-
-.confirm-button {
+.confirm-button { /* Confirm appointment */
   background: var(--color-accent);
   color: var(--color-text);
   padding: 0.8rem 1.2rem;
@@ -214,29 +168,12 @@
   transition: var(--transition);
   box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
-
 .confirm-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
 }
 
-/* Table in MyAppointments */
-.myappointments-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-.myappointments-table th {
-  background: #222;
-  color: var(--color-accent);
-}
-
-.myappointments-table tr:hover {
-  background: #2a2a2a;
-}
-
-/* ========== Dashboard ========== */
+/* ========== Dashboard (Admin) ========== */
 .dashboard-container {
   max-width: 1100px;
   margin: 2rem auto;
@@ -245,14 +182,12 @@
   border-radius: var(--radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
-
 .dashboard-title {
   text-align: center;
   font-size: 2.2rem;
   color: var(--color-accent);
   margin-bottom: 2rem;
 }
-
 .dashboard-section {
   margin-bottom: 3rem;
   padding: 1.5rem;
@@ -260,14 +195,13 @@
   border-radius: var(--radius);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-
 .section-title {
   font-size: 1.5rem;
   margin-bottom: 1rem;
   color: var(--color-accent);
 }
 
-/* ===== Forms ===== */
+/* Forms inside dashboard */
 .business-form,
 .service-form,
 .post-form {
@@ -276,50 +210,7 @@
   gap: 0.8rem;
 }
 
-.business-form .form-row {
-  display: flex;
-  gap: 1rem;
-}
-
-.business-form input,
-.service-form input,
-.post-form input,
-.post-form textarea {
-  padding: 0.6rem;
-  border-radius: var(--radius);
-  border: none;
-  background: #2b2b2b;
-  color: var(--color-text);
-  width: 100%;
-}
-
-.business-form button,
-.service-form button,
-.post-form button {
-  background: var(--color-accent);
-  border: none;
-  border-radius: var(--radius);
-  padding: 0.6rem 1rem;
-  color: var(--color-text);
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.business-form button:hover,
-.service-form button:hover,
-.post-form button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-.business-preview img {
-  margin-top: 1rem;
-  max-width: 200px;
-  border-radius: var(--radius);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-}
-
-/* ===== Appointments Table ===== */
+/* Appointments table (admin) */
 .appointments-table {
   width: 100%;
   border-collapse: collapse;
@@ -327,193 +218,66 @@
   border-radius: var(--radius);
   overflow: hidden;
 }
-
-.appointments-table th,
-.appointments-table td {
-  padding: 0.8rem;
-  text-align: left;
-  border-bottom: 1px solid #333;
-}
-
 .appointments-table th {
   background: #2d2d2d;
   color: var(--color-accent);
 }
 
-.appointments-table tr:hover {
-  background: #2d2d2d;
-}
-
-.table-actions button {
-  margin-right: 0.5rem;
-  padding: 0.6rem 1rem;
-  border-radius: var(--radius);
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.table-actions button:first-child {
-  background: var(--color-accent);
-  color: var(--color-text);
-}
-
-.table-actions button:last-child {
-  background: #e74c3c;
-  color: #fff;
-}
-
-.table-actions button:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-/* ===== Services List ===== */
-.services-list {
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
-}
-
-.service-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.8rem 1rem;
-  background: #222;
-  border-radius: var(--radius);
-  margin-bottom: 0.8rem;
-}
-
+/* Services list (admin) */
 .service-item button {
-  background: crimson;
+  background: crimson; /* Delete button */
   border: none;
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius);
   color: #fff;
   cursor: pointer;
 }
-
 .service-item button:hover {
   opacity: 0.8;
 }
 
-/* ===== Posts ===== */
+/* Posts in dashboard */
 .posts-list {
   list-style: none;
   padding: 0;
   margin: 1rem 0;
 }
-
 .post-item {
   padding: 1rem;
   margin-bottom: 1rem;
   background: #222;
   border-radius: var(--radius);
 }
-
-.post-content {
-  margin-bottom: 0.8rem;
-}
-
 .post-image img {
   max-width: 200px;
-  margin-top: 0.5rem;
   border-radius: var(--radius);
 }
 
-/* ========== Not Found Page ========== */
-.notfound-container {
-  text-align: center;
-  padding: 5rem 2rem;
-}
-
-.notfound-container h1 {
-  font-size: 3rem;
-  color: var(--color-accent);
-  margin-bottom: 1rem;
-}
-
-.notfound-container p {
-  font-size: 1.2rem;
-}
-
 /* ========== Home Page ========== */
-.home-container {
-  font-family: var(--font);
-  color: var(--color-text);
-}
-
-/* ===== Hero Section ===== */
-.hero-section {
+.hero-section { /* Landing hero background */
   position: relative;
   height: 70vh;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
-
-.hero-overlay {
+.hero-overlay { /* Dark overlay with centered content */
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 2rem;
 }
 
-.hero-overlay h1 {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
-  color: var(--color-accent);
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
-}
-
-.hero-overlay button {
-  background: var(--color-accent);
-  color: var(--color-text);
-  border: none;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
-
-.hero-overlay button:hover {
-  background: #d35400;
-  opacity: 0.95;
-  transform: translateY(-3px);
-}
-
-/* ===== Posts Section ===== */
-.home-posts {
-  padding: 3rem 2rem;
-  background-color: #1a1a1a;
-}
-
-.home-posts h2 {
-  text-align: center;
-  margin-bottom: 2rem;
-  font-size: 2rem;
-  color: var(--color-accent);
-}
-
+/* Home posts grid */
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 }
-
 .post-card {
   background: #222;
   padding: 1rem;
@@ -521,97 +285,29 @@
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
   transition: var(--transition);
 }
-
 .post-card:hover {
   transform: translateY(-3px);
 }
 
-.post-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: var(--radius);
-  margin-bottom: 1rem;
-}
-
-.post-card p {
-  font-size: 1rem;
-  line-height: 1.4;
-  color: var(--color-text);
-}
-
-/* ========== My Appointments Page ========== */
+/* ========== My Appointments (User) ========== */
 .myappointments-container {
   max-width: 900px;
   margin: 3rem auto;
   padding: 2rem;
   background: var(--color-card);
   border-radius: var(--radius);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
-
-.myappointments-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 2rem;
-  color: var(--color-accent);
-}
-
-.myappointments-error {
-  color: #e74c3c;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.myappointments-empty {
-  text-align: center;
-  color: #aaa;
-  font-size: 1.1rem;
-}
-
-.myappointments-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: #1a1a1a;
-  border-radius: var(--radius);
-  overflow: hidden;
-}
-
-.myappointments-table th,
-.myappointments-table td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid #333;
-  color: var(--color-text);
-}
-
 .myappointments-table th {
   background: #222;
   color: var(--color-accent);
-  font-weight: bold;
 }
-
-.myappointments-table tr:hover {
-  background: #2a2a2a;
-}
-
 .myappointments-cancel {
-  background: #e74c3c;
+  background: #e74c3c; /* Cancel button */
   color: white;
-  padding: 0.6rem 1rem;
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: var(--transition);
 }
 
-.myappointments-cancel:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-/* ===== Reusable Button Styles ===== */
-.btn {
+/* ========== Reusable Buttons ========== */
+.btn { /* Base button */
   padding: 0.6rem 1rem;
   border-radius: var(--radius);
   background: var(--color-accent);
@@ -621,23 +317,9 @@
   transition: var(--transition);
   border: none;
 }
-
-.btn:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
-}
-
-.btn-primary {
-  background: var(--color-accent);
-  color: var(--color-text);
-}
-
 .btn-danger {
   background: #e74c3c;
-  color: #fff;
 }
-
 .btn-secondary {
   background: #444;
-  color: var(--color-text);
 }

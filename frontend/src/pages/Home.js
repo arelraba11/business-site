@@ -6,16 +6,18 @@ import { apiRequest } from "../api";
 
 export default function Home() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token"); // check if user is logged in
   const [businessName, setBusinessName] = useState("");
   const [businessImage, setBusinessImage] = useState("");
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    // Load business info and posts on page load
     fetchBusiness();
     fetchPosts();
   }, []);
 
+  // Fetch business info (name + optional image)
   async function fetchBusiness() {
     try {
       const data = await apiRequest("/business", "GET");
@@ -26,16 +28,18 @@ export default function Home() {
     }
   }
 
+  // Fetch posts from backend
   async function fetchPosts() {
-  try {
-    const res = await apiRequest("/posts", "GET");
-    setPosts(Array.isArray(res.data) ? res.data : []);
-  } catch (err) {
-    console.error("Failed to load posts", err);
-    setPosts([]);
+    try {
+      const res = await apiRequest("/posts", "GET");
+      setPosts(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Failed to load posts", err);
+      setPosts([]);
+    }
   }
-}
 
+  // Redirect user to appointment booking
   const handleBookAppointment = () => {
     if (!token) navigate("/login");
     else navigate("/appointments");
@@ -43,7 +47,7 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      {/* Hero Section */}
+      {/* Hero Section with static background image */}
       <div className="hero-section" style={{ backgroundImage: "url(/heroPage.jpg)" }}>
         <div className="hero-overlay">
           <h1>{businessName}</h1>

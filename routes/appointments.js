@@ -1,6 +1,7 @@
+// routes/appointments.js - Appointment routes
 import express from "express";
 import auth from "../middleware/auth.js";
-import adminOnly from "../middleware/isAdmin.js";
+import isAdmin from "../middleware/isAdmin.js";
 import {
   createAppointment,
   getMyAppointments,
@@ -9,22 +10,21 @@ import {
   updateAppointmentStatus,
 } from "../controllers/appointmentController.js";
 
-// Routes for appointment-related operations
 const router = express.Router();
 
-// Client creates new appointment
+// Create new appointment (user)
 router.post("/", auth, createAppointment);
 
-// Retrieve appointments of logged-in user
+// Get logged-in user's appointments
 router.get("/my", auth, getMyAppointments);
 
-// Client cancels their appointment
+// Cancel appointment (user)
 router.delete("/:id", auth, deleteAppointment);
 
-// Admin retrieves all appointments
-router.get("/", [auth, adminOnly], getAllAppointments);
+// Get all appointments (admin only)
+router.get("/", auth, isAdmin, getAllAppointments);
 
-// Admin updates appointment status
-router.patch("/:id", [auth, adminOnly], updateAppointmentStatus);
+// Update appointment status (admin only)
+router.patch("/:id", auth, isAdmin, updateAppointmentStatus);
 
 export default router;

@@ -1,21 +1,13 @@
 import mongoose from "mongoose";
 
-const postSchema = new mongoose.Schema({
-  content: {
-    type: String,
-    required: true,
-    trim: true,
-  }, // Main text content of the post
-  image: {
-    type: String,
-    default: null,
-  }, // Optional image URL
-  author: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  } // Reference to the user who created the post
-}, { timestamps: true }); // Adds createdAt and updatedAt
+const postSchema = new mongoose.Schema(
+  {
+    content: { type: String, required: true, trim: true },
+    image: { type: String, default: null },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  },
+  { timestamps: true }
+);
 
 postSchema.pre("validate", function (next) {
   if (!this.content && !this.image) {

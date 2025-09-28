@@ -2,29 +2,30 @@
 const API_URL = "http://localhost:4000/api";
 
 /**
- * Generic helper for making API requests to the backend
- * @param {string} endpoint - API endpoint (e.g. "/users/login")
- * @param {string} method - HTTP method (default: GET)
- * @param {Object|null} body - Request payload (default: null)
- * @param {string|null} token - Optional auth token for protected routes
+ * Generic helper for making API requests
+ * Centralizes fetch logic with JSON and token handling
+ *
+ * @param {string} endpoint - e.g. "/users/login"
+ * @param {string} [method="GET"] - HTTP method
+ * @param {Object|null} [body=null] - Request payload
+ * @param {string|null} [token=null] - Optional Bearer token
+ * @returns {Promise<any>} - Parsed JSON response
  */
 export async function apiRequest(endpoint, method = "GET", body = null, token = null) {
   const headers = { "Content-Type": "application/json" };
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  // Perform fetch request
   const response = await fetch(`${API_URL}${endpoint}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : null,
   });
 
-  // Handle errors by throwing message from server
+  // Throw error with message provided by server if response is not ok
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.message || "Request failed");
   }
 
-  // Parse and return JSON response
-  return response.json();
+  return response.json(); // Return parsed JSON payload
 }

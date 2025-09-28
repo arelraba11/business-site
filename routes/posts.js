@@ -1,5 +1,4 @@
-// Routes for managing blog posts (create, read, delete)
-
+// routes/posts.js - Blog post routes
 import express from "express";
 import auth from "../middleware/auth.js";
 import isAdmin from "../middleware/isAdmin.js";
@@ -7,13 +6,13 @@ import { createPost, getPosts, deletePost } from "../controllers/postController.
 
 const router = express.Router();
 
-// Route to create a new post (requires authentication and admin)
+// Create post (admin only)
 router.post("/", auth, isAdmin, createPost);
 
-// Route to get all posts (public access)
+// Get all posts (public)
 router.get("/", getPosts);
 
-// Route to delete a post by ID (requires authentication and admin)
+// Delete post by ID (admin only)
 router.delete("/:id", auth, isAdmin, deletePost);
 
 export default router;

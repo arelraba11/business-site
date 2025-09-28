@@ -1,13 +1,15 @@
+/* Navbar container */
 .navbar {
   padding: 12px 24px;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid #222; /* Subtle bottom divider */
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Space between links and auth actions */
   align-items: center;
   background-color: var(--color-bg);
   color: var(--color-text);
 }
 
+/* Main navigation links */
 .navbar-links a {
   margin: 0 12px;
   text-decoration: none;
@@ -17,13 +19,14 @@
 }
 
 .navbar-links a:hover {
-  color: var(--color-accent);
+  color: var(--color-accent); /* Highlight link on hover */
 }
 
 .navbar-links a.active {
-  border-bottom: 2px solid var(--color-accent);
+  border-bottom: 2px solid var(--color-accent); /* Active link indicator */
 }
 
+/* Auth buttons (Login/Register/Logout) */
 .navbar-auth a,
 .navbar-auth button {
   margin-left: 12px;
@@ -38,8 +41,9 @@
   transition: var(--transition);
 }
 
+/* Hover effect for auth actions */
 .navbar-auth a:hover,
 .navbar-auth button:hover {
   opacity: 0.9;
-  transform: translateY(-2px);
+  transform: translateY(-2px); /* Slight lift effect */
 }

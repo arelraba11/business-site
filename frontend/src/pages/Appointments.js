@@ -4,6 +4,7 @@ import { apiRequest } from "../api";
 import "../styles/Pages.css";
 
 export default function Appointments() {
+  // State for available services and form handling
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -13,6 +14,7 @@ export default function Appointments() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch services list from backend (prices array inside business info)
     async function fetchServices() {
       try {
         const data = await apiRequest("/business", "GET");
@@ -29,12 +31,14 @@ export default function Appointments() {
   if (loading) return <p className="appointments-loading">Loading services...</p>;
   if (error) return <p className="appointments-error">{error}</p>;
 
+  // Select a service and reset date/time inputs
   function handleSelect(service) {
     setSelectedService(service);
     setDate("");
     setTime("");
   }
 
+  // Confirm appointment creation
   async function handleConfirm() {
     if (!date || !time) {
       alert("Please select a valid date and time.");
@@ -48,13 +52,13 @@ export default function Appointments() {
         "POST",
         {
           service: selectedService.service,
-          dateTime: new Date(`${date}T${time}`),
+          dateTime: new Date(`${date}T${time}`), // Combine date and time
         },
         token
       );
 
       alert("Appointment booked successfully!");
-      navigate("/"); // redirect to homepage
+      navigate("/"); // Redirect to homepage after booking
     } catch (err) {
       alert(err.message || "Failed to book appointment");
     }
@@ -78,6 +82,7 @@ export default function Appointments() {
         ))}
       </ul>
 
+      {/* Show form only when a service is selected */}
       {selectedService && (
         <div className="selected-service-card">
           <h3 className="selected-service-title">Selected Service</h3>

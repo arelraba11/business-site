@@ -1,33 +1,33 @@
-// Main application component handling routing with React Router.
+// Main application entry point with routing
 import React from "react";
-// React and routing components
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+// Global navigation and route protection
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./routes/ProtectedRoute";
 
+// Application pages
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Appointments from "./pages/Appointments";
-import NotFound from "./pages/NotFound";
 import MyAppointments from "./pages/MyAppointments";
 import Dashboard from "./pages/Dashboard";
+import NotFound from "./pages/NotFound";
 
 export default function App() {
   return (
     <BrowserRouter>
-      {/* Navigation displayed on all pages */}
+      {/* Persistent navigation bar */}
       <Navbar />
       <div style={{ padding: 16 }}>
-        {/* Define public and protected routes */}
         <Routes>
-          <Route path="/" element={<Home />} />
-
           {/* Public routes */}
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Protected routes */}
+          {/* Protected routes - require auth */}
           <Route
             path="/appointments"
             element={
@@ -53,7 +53,7 @@ export default function App() {
             }
           />
 
-          {/* Fallback route */}
+          {/* Catch-all for undefined routes */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

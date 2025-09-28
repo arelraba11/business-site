@@ -1,29 +1,26 @@
 import mongoose from "mongoose";
 
 const businessInfoSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
+  name: { type: String, required: true },
   socialLinks: {
-    facebook: String, // Facebook page URL
-    instagram: String, // Instagram profile URL
-    tiktok: String // TikTok profile URL
+    facebook: String,
+    instagram: String,
+    tiktok: String,
   },
   openingHours: {
     type: Map,
-    of: String // Map of days to opening hours (e.g., "Monday": "9am-5pm")
+    of: String,
   },
   prices: [
     {
-      service: String, // Name of the service offered
-      price: Number // Price for the service
-    }
+      service: String,
+      price: Number,
+    },
   ],
   createdAt: {
     type: Date,
-    default: Date.now // Timestamp of document creation
-  }
+    default: Date.now,
+  },
 });
 
 const BusinessInfo = mongoose.model("BusinessInfo", businessInfoSchema);

@@ -1,11 +1,9 @@
-// Entry point of the React application
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
+// React application entry point
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 import "./styles/index.css";
 
-// Create root element and render the main App component
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <App />
-);
+// Mount <App /> into the root DOM element
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(<App />);

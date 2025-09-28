@@ -3,6 +3,7 @@ import { apiRequest } from "../api";
 import "../styles/Pages.css";
 
 export default function Dashboard() {
+  // State for appointments, services, business info, and posts
   const [appointments, setAppointments] = useState([]);
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,12 +16,14 @@ export default function Dashboard() {
   const [postImage, setPostImage] = useState("");
 
   useEffect(() => {
+    // Fetch initial data for dashboard
     fetchAppointments();
     fetchServices();
     fetchBusinessInfo();
     fetchPosts();
   }, []);
 
+  // Fetch all appointments
   async function fetchAppointments() {
     try {
       const token = localStorage.getItem("token");
@@ -33,6 +36,7 @@ export default function Dashboard() {
     }
   }
 
+  // Fetch services (prices array from business info)
   async function fetchServices() {
     try {
       const data = await apiRequest("/business", "GET");
@@ -42,25 +46,28 @@ export default function Dashboard() {
     }
   }
 
+  // Fetch business info (currently only name is used)
   async function fetchBusinessInfo() {
     try {
       const data = await apiRequest("/business", "GET");
       setBusinessName(data.name || "");
     } catch {
-      // ignore
+      // ignore errors silently
     }
   }
 
+  // Fetch posts
   async function fetchPosts() {
-  try {
-    const res = await apiRequest("/posts", "GET");
-    setPosts(Array.isArray(res.data) ? res.data : []);
-  } catch (err) {
-    console.error("Failed to load posts", err);
-    setPosts([]);
+    try {
+      const res = await apiRequest("/posts", "GET");
+      setPosts(Array.isArray(res.data) ? res.data : []);
+    } catch (err) {
+      console.error("Failed to load posts", err);
+      setPosts([]);
+    }
   }
-}
 
+  // Update appointment status (approve/reject)
   async function handleUpdate(id, status) {
     try {
       const token = localStorage.getItem("token");
@@ -73,6 +80,7 @@ export default function Dashboard() {
     }
   }
 
+  // Add a new service
   async function handleAddService(e) {
     e.preventDefault();
     try {
@@ -92,6 +100,7 @@ export default function Dashboard() {
     }
   }
 
+  // Delete a service
   async function handleDeleteService(serviceId) {
     try {
       const token = localStorage.getItem("token");
@@ -108,6 +117,7 @@ export default function Dashboard() {
     }
   }
 
+  // Update business info (name + services)
   async function handleBusinessInfoSubmit(e) {
     e.preventDefault();
     try {
@@ -126,23 +136,25 @@ export default function Dashboard() {
     }
   }
 
+  // Create a new post
   async function handlePostSubmit(e) {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem("token");
-    const payload = { content: postContent };
-    if (postImage) payload.image = postImage;
-    const res = await apiRequest("/posts", "POST", payload, token);
-    const newPost = res.data ? res.data : res; 
-    setPosts((prev) => [newPost, ...prev]);
-    setPostContent("");
-    setPostImage("");
-    alert("Post created successfully!");
-  } catch {
-    alert("Failed to create post");
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      const payload = { content: postContent };
+      if (postImage) payload.image = postImage;
+      const res = await apiRequest("/posts", "POST", payload, token);
+      const newPost = res.data ? res.data : res; 
+      setPosts((prev) => [newPost, ...prev]);
+      setPostContent("");
+      setPostImage("");
+      alert("Post created successfully!");
+    } catch {
+      alert("Failed to create post");
+    }
   }
-}
 
+  // Delete a post
   async function handleDeletePost(id) {
     try {
       const token = localStorage.getItem("token");
@@ -154,6 +166,7 @@ export default function Dashboard() {
     }
   }
 
+  // Loading/error states
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
@@ -161,7 +174,7 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <h2 className="dashboard-title">Admin Dashboard</h2>
 
-      {/* Business Info */}
+      {/* Business Info Section */}
       <div className="dashboard-section business-info">
         <h3 className="section-title">Business Info</h3>
         <form onSubmit={handleBusinessInfoSubmit} className="business-form">
@@ -178,7 +191,7 @@ export default function Dashboard() {
         </form>
       </div>
 
-      {/* Appointments */}
+      {/* Appointments Section */}
       <div className="dashboard-section appointments">
         <h3 className="section-title">Appointments</h3>
         <table className="appointments-table">
@@ -216,7 +229,7 @@ export default function Dashboard() {
         </table>
       </div>
 
-      {/* Services */}
+      {/* Services Section */}
       <div className="dashboard-section services">
         <h3 className="section-title">Services</h3>
         <ul className="services-list">
@@ -249,7 +262,7 @@ export default function Dashboard() {
         </form>
       </div>
 
-      {/* Posts */}
+      {/* Posts Section */}
       <div className="dashboard-section posts">
         <h3 className="section-title">Posts</h3>
         <form onSubmit={handlePostSubmit} className="post-form">

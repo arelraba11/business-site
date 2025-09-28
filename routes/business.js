@@ -1,3 +1,4 @@
+// routes/business.js - Business info routes
 import express from "express";
 import {
   getBusinessInfo,
@@ -9,13 +10,13 @@ import isAdmin from "../middleware/isAdmin.js";
 
 const router = express.Router();
 
-// GET /business - Retrieve business information
+// Get business info (public)
 router.get("/", getBusinessInfo);
 
-// POST /business - Create or update business information (admin only)
+// Create/update business info (admin only)
 router.post("/", auth, isAdmin, createOrUpdateBusinessInfo);
 
-// DELETE /business/services/:id - Remove a specific service (admin only)
+// Delete service by ID (admin only)
 router.delete("/services/:id", auth, isAdmin, deleteServiceFromBusiness);
 
 export default router;

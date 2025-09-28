@@ -1,23 +1,27 @@
 :root {
-  --color-bg: #111;
-  --color-card: #1a1a1a;
-  --color-text: #f1f1f1;
-  --color-accent: #d17a4b;
-  --radius: 8px;
-  --transition: all 0.3s ease;
-  --font: 'Arial', sans-serif;
+  /* Theme variables for easy customization */
+  --color-bg: #111;          /* Main background */
+  --color-card: #1a1a1a;     /* Card/section background */
+  --color-text: #f1f1f1;     /* Default text color */
+  --color-accent: #d17a4b;   /* Accent / link color */
+  --radius: 8px;             /* Border radius for rounded corners */
+  --transition: all 0.3s ease; /* Smooth transition for hover states */
+  --font: 'Arial', sans-serif; /* Default font */
 }
 
+/* Reset margin & padding, use border-box */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
+/* Full height app container */
 html, body, #root {
   height: 100%;
 }
 
+/* Base body styles */
 body {
   font-family: var(--font, 'Arial', sans-serif);
   background-color: var(--color-bg);
@@ -25,6 +29,7 @@ body {
   line-height: 1.6;
 }
 
+/* Links */
 a {
   text-decoration: none;
   color: var(--color-accent);
@@ -32,5 +37,5 @@ a {
 }
 
 a:hover {
-  opacity: 0.85;
+  opacity: 0.85; /* Subtle hover effect */
 }
