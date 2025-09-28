@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../api";
+import "../styles/Pages.css";
 
 export default function Appointments() {
   const [services, setServices] = useState([]);
@@ -25,8 +26,8 @@ export default function Appointments() {
     fetchServices();
   }, []);
 
-  if (loading) return <p>Loading services...</p>;
-  if (error) return <p style={{ color: "red" }}>{error}</p>;
+  if (loading) return <p className="appointments-loading">Loading services...</p>;
+  if (error) return <p className="appointments-error">{error}</p>;
 
   function handleSelect(service) {
     setSelectedService(service);
@@ -60,14 +61,15 @@ export default function Appointments() {
   }
 
   return (
-    <div>
-      <h2>Choose a Service</h2>
-      <ul>
+    <div className="appointments-container">
+      <h2 className="appointments-title">Choose a Service</h2>
+
+      <ul className="services-list">
         {services.map((s) => (
-          <li key={s._id}>
+          <li key={s._id} className="service-item">
             {s.service} – ${s.price}
             <button
-              style={{ marginLeft: "10px" }}
+              className="btn btn-primary"
               onClick={() => handleSelect(s)}
             >
               Select
@@ -77,32 +79,30 @@ export default function Appointments() {
       </ul>
 
       {selectedService && (
-        <div style={{ marginTop: "2em", border: "1px solid #ccc", padding: "1em" }}>
-          <h3>Selected Service</h3>
-          <p>
+        <div className="selected-service-card">
+          <h3 className="selected-service-title">Selected Service</h3>
+          <p className="selected-service-info">
             <strong>{selectedService.service}</strong> – ${selectedService.price}
           </p>
 
-          <div style={{ marginTop: "1em" }}>
+          <div className="date-time-form">
             <label>
-              Date:{" "}
+              Date:
               <input
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
               />
             </label>
-            <br />
             <label>
-              Time:{" "}
+              Time:
               <input
                 type="time"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
               />
             </label>
-            <br />
-            <button onClick={handleConfirm} style={{ marginTop: "10px" }}>
+            <button className="btn btn-primary" onClick={handleConfirm}>
               Confirm Appointment
             </button>
           </div>

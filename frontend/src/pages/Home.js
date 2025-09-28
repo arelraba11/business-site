@@ -1,53 +1,68 @@
-import React from "react";
-import "../styles/Home.css";
+// pages/Home.js
+import React, { useEffect, useState } from "react";
+import "../styles/Pages.css";
 import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api";
 
 export default function Home() {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [businessName, setBusinessName] = useState("");
+  const [businessImage, setBusinessImage] = useState("");
+  const [posts, setPosts] = useState([]);
 
-  // Navigate to booking page or login if not authenticated
+  useEffect(() => {
+    fetchBusiness();
+    fetchPosts();
+  }, []);
+
+  async function fetchBusiness() {
+    try {
+      const data = await apiRequest("/business", "GET");
+      setBusinessName(data.name || "Business Name");
+      setBusinessImage(data.image || "https://via.placeholder.com/800x400");
+    } catch {
+      setBusinessName("Business Name");
+    }
+  }
+
+  async function fetchPosts() {
+    try {
+      const data = await apiRequest("/posts", "GET");
+      setPosts(Array.isArray(data) ? data : []);
+    } catch {
+      setPosts([]);
+    }
+  }
+
   const handleBookAppointment = () => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      navigate("/appointments");
-    }
-  };
-
-  // Navigate to user's appointments or login if not authenticated
-  const handleMyAppointments = () => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      navigate("/my-appointments");
-    }
+    if (!token) navigate("/login");
+    else navigate("/appointments");
   };
 
   return (
     <div className="home-container">
-      {/* Header: Business name and main image */}
-      <div className="home-header">
-        <h1>Business Name</h1>
-        <img
-          src="https://via.placeholder.com/400x200"
-          alt="Business"
-          className="home-image"
-        />
+      {/* Hero Section */}
+      <div className="hero-section" style={{ backgroundImage: `url(${businessImage})` }}>
+        <div className="hero-overlay">
+          <h1>{businessName}</h1>
+          <button onClick={handleBookAppointment} className="btn btn-primary">
+            Book Appointment
+          </button>
+        </div>
       </div>
 
-      {/* Main action buttons */}
-      <div className="home-actions">
-        <button onClick={handleBookAppointment}>Book Appointment</button>
-        <button onClick={handleMyAppointments}>My Appointments</button>
-      </div>
-
-      {/* Example posts section */}
+      {/* Posts Section */}
       <div className="home-posts">
-        <h2>Latest Posts</h2>
-        <div className="post-card">
-          <img src="https://via.placeholder.com/300" alt="Post" />
-          <p>This is a sample post description.</p>
+        <h2>Our Posts</h2>
+        <div className="posts-grid">
+          {posts.map((post) => (
+            <div key={post._id} className="post-card">
+              {post.image && <img src={post.image} alt="Post" />}
+              <p>{post.content}</p>
+            </div>
+          ))}
+          {posts.length === 0 && <p>No posts available</p>}
         </div>
       </div>
     </div>

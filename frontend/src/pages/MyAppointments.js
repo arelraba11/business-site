@@ -1,6 +1,7 @@
 // src/pages/MyAppointments.js
 import React, { useEffect, useState } from "react";
 import { apiRequest } from "../api";
+import "../styles/Pages.css";
 
 export default function MyAppointments() {
   const [appointments, setAppointments] = useState([]);
@@ -30,13 +31,13 @@ export default function MyAppointments() {
   }
 
   return (
-    <div>
-      <h2>My Appointments</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+    <div className="myappointments-container">
+      <h2 className="myappointments-title">My Appointments</h2>
+      {error && <p className="myappointments-error">{error}</p>}
       {appointments.length === 0 ? (
-        <p>No appointments found.</p>
+        <p className="myappointments-empty">No appointments found.</p>
       ) : (
-        <table border="1" cellPadding="8" style={{ borderCollapse: "collapse" }}>
+        <table className="myappointments-table">
           <thead>
             <tr>
               <th>Service</th>
@@ -53,7 +54,10 @@ export default function MyAppointments() {
                 <td>{appt.status}</td>
                 <td>
                   {appt.status !== "cancelled" && (
-                    <button onClick={() => handleCancel(appt._id)}>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleCancel(appt._id)}
+                    >
                       Cancel
                     </button>
                   )}

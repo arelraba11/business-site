@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../api";
+import "../styles/Pages.css";
 
 function Register() {
   const [username, setUsername] = useState("");
@@ -25,9 +26,9 @@ function Register() {
   }
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="register-container">
+      <h2 className="register-title">Register</h2>
+      <form className="register-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Username"
@@ -49,9 +50,9 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit">Register</button>
+        <button type="submit" className="btn btn-primary">Register</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 }

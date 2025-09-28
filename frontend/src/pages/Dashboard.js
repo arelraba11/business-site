@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiRequest } from "../api";
-import "../styles/Dashboard.css"; 
+import "../styles/Pages.css";
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -9,10 +9,8 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [newService, setNewService] = useState("");
   const [newPrice, setNewPrice] = useState("");
-  // Business Info
   const [businessName, setBusinessName] = useState("");
   const [businessImage, setBusinessImage] = useState("");
-  // Posts
   const [posts, setPosts] = useState([]);
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState("");
@@ -161,47 +159,41 @@ export default function Dashboard() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div className="dashboard">
-      <h2>Admin Dashboard</h2>
+    <div className="dashboard-container">
+      <h2 className="dashboard-title">Admin Dashboard</h2>
 
       {/* Business Info */}
-      <div className="section">
-        <h3>Business Info</h3>
-        <form onSubmit={handleBusinessInfoSubmit}>
-          <div>
-            <label>
-              Business Name:{" "}
-              <input
-                type="text"
-                value={businessName}
-                onChange={(e) => setBusinessName(e.target.value)}
-                required
-              />
-            </label>
-            <label>
-              Image URL:{" "}
-              <input
-                type="text"
-                value={businessImage}
-                onChange={(e) => setBusinessImage(e.target.value)}
-              />
-            </label>
-            <button type="submit">
-              Save Info
-            </button>
+      <div className="dashboard-section business-info">
+        <h3 className="section-title">Business Info</h3>
+        <form onSubmit={handleBusinessInfoSubmit} className="business-form">
+          <div className="form-row">
+            <input
+              type="text"
+              placeholder="Business Name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Image URL"
+              value={businessImage}
+              onChange={(e) => setBusinessImage(e.target.value)}
+            />
+            <button type="submit" className="btn btn-primary">Save Info</button>
           </div>
           {businessImage && (
-            <div>
-              <img src={businessImage} alt="Business" style={{ maxWidth: "200px" }} />
+            <div className="business-preview">
+              <img src={businessImage} alt="Business" />
             </div>
           )}
         </form>
       </div>
 
       {/* Appointments */}
-      <div className="section">
-        <h3>Appointments</h3>
-        <table cellPadding="8" style={{ width: "100%" }}>
+      <div className="dashboard-section appointments">
+        <h3 className="section-title">Appointments</h3>
+        <table className="appointments-table">
           <thead>
             <tr>
               <th>User</th>
@@ -222,14 +214,11 @@ export default function Dashboard() {
                 <td>{new Date(a.dateTime).toLocaleDateString()}</td>
                 <td>{new Date(a.dateTime).toLocaleTimeString()}</td>
                 <td>{a.status}</td>
-                <td>
-                  <button onClick={() => handleUpdate(a._id, "approved")}>
+                <td className="table-actions">
+                  <button className="btn btn-primary" onClick={() => handleUpdate(a._id, "approved")}>
                     Approve
                   </button>
-                  <button
-                    onClick={() => handleUpdate(a._id, "rejected")}
-                    style={{ marginLeft: "10px" }}
-                  >
+                  <button className="btn btn-danger" onClick={() => handleUpdate(a._id, "rejected")}>
                     Reject
                   </button>
                 </td>
@@ -240,23 +229,20 @@ export default function Dashboard() {
       </div>
 
       {/* Services */}
-      <div className="section">
-        <h3>Services</h3>
-        <ul>
+      <div className="dashboard-section services">
+        <h3 className="section-title">Services</h3>
+        <ul className="services-list">
           {services.map((s) => (
-            <li key={s._id}>
+            <li key={s._id} className="service-item">
               {s.service} – ${s.price}
-              <button
-                style={{ marginLeft: "10px" }}
-                onClick={() => handleDeleteService(s._id)}
-              >
+              <button className="btn btn-danger" onClick={() => handleDeleteService(s._id)}>
                 Delete
               </button>
             </li>
           ))}
         </ul>
 
-        <form onSubmit={handleAddService}>
+        <form onSubmit={handleAddService} className="service-form">
           <input
             type="text"
             placeholder="Service name"
@@ -270,52 +256,41 @@ export default function Dashboard() {
             value={newPrice}
             onChange={(e) => setNewPrice(e.target.value)}
             required
-            style={{ marginLeft: "10px" }}
           />
-          <button type="submit" style={{ marginLeft: "10px" }}>
-            Add Service
-          </button>
+          <button type="submit" className="btn btn-primary">Add Service</button>
         </form>
       </div>
 
       {/* Posts */}
-      <div className="section">
-        <h3>Posts</h3>
-        <form onSubmit={handlePostSubmit}>
-          <div>
-            <textarea
-              placeholder="Write your post content..."
-              value={postContent}
-              onChange={(e) => setPostContent(e.target.value)}
-              rows={3}
-              style={{ width: "60%", marginRight: "10px" }}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Image URL (optional)"
-              value={postImage}
-              onChange={(e) => setPostImage(e.target.value)}
-              style={{ width: "30%" }}
-            />
-          </div>
-          <button type="submit" style={{ marginTop: "0.5em" }}>
-            Create Post
-          </button>
+      <div className="dashboard-section posts">
+        <h3 className="section-title">Posts</h3>
+        <form onSubmit={handlePostSubmit} className="post-form">
+          <textarea
+            placeholder="Write your post content..."
+            value={postContent}
+            onChange={(e) => setPostContent(e.target.value)}
+            rows={3}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Image URL (optional)"
+            value={postImage}
+            onChange={(e) => setPostImage(e.target.value)}
+          />
+          <button type="submit" className="btn btn-primary">Create Post</button>
         </form>
-        <ul>
+
+        <ul className="posts-list">
           {posts.map((post) => (
-            <li key={post._id} style={{ border: "1px solid #ccc", padding: "1em", marginBottom: "1em" }}>
-              <div>{post.content}</div>
+            <li key={post._id} className="post-item">
+              <div className="post-content">{post.content}</div>
               {post.image && (
-                <div>
-                  <img src={post.image} alt="Post" style={{ maxWidth: "200px", marginTop: "0.5em" }} />
+                <div className="post-image">
+                  <img src={post.image} alt="Post" />
                 </div>
               )}
-              <button
-                onClick={() => handleDeletePost(post._id)}
-                style={{ marginTop: "0.5em" }}
-              >
+              <button className="btn btn-danger" onClick={() => handleDeletePost(post._id)}>
                 Delete
               </button>
             </li>
