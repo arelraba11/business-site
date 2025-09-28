@@ -27,13 +27,14 @@ export default function Home() {
   }
 
   async function fetchPosts() {
-    try {
-      const data = await apiRequest("/posts", "GET");
-      setPosts(Array.isArray(data) ? data : []);
-    } catch {
-      setPosts([]);
-    }
+  try {
+    const res = await apiRequest("/posts", "GET");
+    setPosts(Array.isArray(res.data) ? res.data : []);
+  } catch (err) {
+    console.error("Failed to load posts", err);
+    setPosts([]);
   }
+}
 
   const handleBookAppointment = () => {
     if (!token) navigate("/login");

@@ -54,13 +54,14 @@ export default function Dashboard() {
   }
 
   async function fetchPosts() {
-    try {
-      const data = await apiRequest("/posts", "GET");
-      setPosts(Array.isArray(data) ? data : []);
-    } catch {
-      // ignore
-    }
+  try {
+    const res = await apiRequest("/posts", "GET");
+    setPosts(Array.isArray(res.data) ? res.data : []);
+  } catch (err) {
+    console.error("Failed to load posts", err);
+    setPosts([]);
   }
+}
 
   async function handleUpdate(id, status) {
     try {
@@ -129,20 +130,21 @@ export default function Dashboard() {
   }
 
   async function handlePostSubmit(e) {
-    e.preventDefault();
-    try {
-      const token = localStorage.getItem("token");
-      const payload = { content: postContent };
-      if (postImage) payload.image = postImage;
-      const newPost = await apiRequest("/posts", "POST", payload, token);
-      setPosts((prev) => [newPost, ...prev]);
-      setPostContent("");
-      setPostImage("");
-      alert("Post created successfully!");
-    } catch {
-      alert("Failed to create post");
-    }
+  e.preventDefault();
+  try {
+    const token = localStorage.getItem("token");
+    const payload = { content: postContent };
+    if (postImage) payload.image = postImage;
+    const res = await apiRequest("/posts", "POST", payload, token);
+    const newPost = res.data ? res.data : res; // כדי להתאים ל־response שלך
+    setPosts((prev) => [newPost, ...prev]);
+    setPostContent("");
+    setPostImage("");
+    alert("Post created successfully!");
+  } catch {
+    alert("Failed to create post");
   }
+}
 
   async function handleDeletePost(id) {
     try {
@@ -233,7 +235,7 @@ export default function Dashboard() {
         <h3 className="section-title">Services</h3>
         <ul className="services-list">
           {services.map((s) => (
-            <li key={s._id} className="service-item">
+            <li key={s._id || s.service} className="service-item">
               {s.service} – ${s.price}
               <button className="btn btn-danger" onClick={() => handleDeleteService(s._id)}>
                 Delete
@@ -283,7 +285,7 @@ export default function Dashboard() {
 
         <ul className="posts-list">
           {posts.map((post) => (
-            <li key={post._id} className="post-item">
+            <li key={post._id || post.content} className="post-item">
               <div className="post-content">{post.content}</div>
               {post.image && (
                 <div className="post-image">
