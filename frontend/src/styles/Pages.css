@@ -245,6 +245,53 @@
   gap: 0.8rem;
 }
 
+/* Opening hours */
+.opening-hours {
+  margin-top: 1.2rem;
+}
+
+.opening-hours h4 {
+  margin-bottom: 0.8rem;
+  color: var(--color-accent);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.opening-hours-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.8rem;
+  margin: 0.4rem 0;
+}
+
+.day-label {
+  width: 100px;
+  font-weight: bold;
+  color: var(--color-accent);
+}
+
+.opening-hours-row select {
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #555;
+  min-width: 100px;
+  font-size: 0.95rem;
+}
+
+.opening-hours-row select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 6px rgba(227, 167, 111, 0.5);
+}
+
+.to-label {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
 /* Appointments table (admin) */
 .appointments-table {
   width: 100%;
@@ -297,9 +344,6 @@
   max-width: 200px;
   border-radius: var(--radius);
 }
-
-
-
 /* ========== Home Page ========== */
 .hero-section {
   position: relative;

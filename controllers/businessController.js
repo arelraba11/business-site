@@ -1,5 +1,12 @@
 import BusinessInfo from "../models/BusinessInfo.js";
 
+// Validate opening hours format: "HH:MM-HH:MM" or empty
+function isValidTimeRange(value) {
+  if (!value) return true; // allow empty/Closed
+  const regex = /^([01]\d|2[0-3]):(00|30)-([01]\d|2[0-3]):(00|30)$/;
+  return regex.test(value);
+}
+
 // Get business info (single document)
 export const getBusinessInfo = async (req, res) => {
   try {
@@ -31,21 +38,26 @@ export const deleteServiceFromBusiness = async (req, res) => {
 // Create or update business info
 export const createOrUpdateBusinessInfo = async (req, res) => {
   try {
-    let info = await BusinessInfo.findOne();
+    const { name, socialLinks, openingHours, prices } = req.body;
 
-    if (info) {
-      if (req.body.name) info.name = req.body.name;
-      if (req.body.prices) info.prices = req.body.prices;
-      if (req.body.socialLinks) info.socialLinks = req.body.socialLinks;
-      if (req.body.openingHours) info.openingHours = req.body.openingHours;
-
-      await info.save();
-      return res.json(info);
-    } else {
-      const newBusiness = new BusinessInfo(req.body);
-      await newBusiness.save();
-      return res.json(newBusiness);
+    // Validate opening hours if provided
+    if (openingHours) {
+      for (const [day, value] of Object.entries(openingHours)) {
+        if (!isValidTimeRange(value)) {
+          return res.status(400).json({
+            error: `Invalid time format for ${day}. Use "HH:MM-HH:MM" (e.g. "09:00-17:30") or leave empty.`,
+          });
+        }
+      }
     }
+
+    const updated = await BusinessInfo.findOneAndUpdate(
+      {},
+      { name, socialLinks, openingHours, prices },
+      { new: true, upsert: true }
+    );
+
+    res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
