@@ -14,6 +14,26 @@ export const getBusinessInfo = async (req, res) => {
   }
 };
 
+// Delete a specific service from business info
+export const deleteServiceFromBusiness = async (req, res) => {
+  try {
+    const business = await BusinessInfo.findOne();
+    if (!business) {
+      return res.status(404).json({ message: "Business not found" });
+    }
+
+    // Filter out the service by id
+    business.prices = business.prices.filter(
+      (service) => service._id.toString() !== req.params.id
+    );
+
+    await business.save();
+    res.json(business);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // Create a new business info document or update the existing one.
 export const createOrUpdateBusinessInfo = async (req, res) => {
   try {

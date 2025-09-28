@@ -1,5 +1,9 @@
 import express from "express";
-import { getBusinessInfo, createOrUpdateBusinessInfo } from "../controllers/businessController.js";
+import {
+  getBusinessInfo,
+  createOrUpdateBusinessInfo,
+  deleteServiceFromBusiness,
+} from "../controllers/businessController.js";
 import auth from "../middleware/auth.js";
 import isAdmin from "../middleware/isAdmin.js";
 
@@ -10,5 +14,8 @@ router.get("/", getBusinessInfo);
 
 // POST /business - Create or update business information (admin only)
 router.post("/", auth, isAdmin, createOrUpdateBusinessInfo);
+
+// DELETE /business/services/:id - Remove a specific service (admin only)
+router.delete("/services/:id", auth, isAdmin, deleteServiceFromBusiness);
 
 export default router;
