@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-  }, // Text content of the post
+  }, // Main text content of the post
   image: {
     type: String,
     default: null,
@@ -18,7 +18,6 @@ const postSchema = new mongoose.Schema({
 }, { timestamps: true }); // Adds createdAt and updatedAt
 
 postSchema.pre("validate", function (next) {
-  // Ensure at least text or image is provided
   if (!this.content && !this.image) {
     next(new Error("Post must have either text content or an image."));
   } else {

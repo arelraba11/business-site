@@ -4,9 +4,13 @@ import Post from "../models/Post.js";
 const createPost = async (req, res) => {
   // Extract request body and save new post to DB
   try {
-    const { title, content, image } = req.body;
+    const { content, image } = req.body;
+    // Validate inputs
+    if (!content && !image) {
+      return res.status(400).json({ success: false, message: "Either content or image is required" });
+    }
     // Author is taken from the logged-in user (via token)
-    const post = new Post({ title, content, image, author: req.user.id });
+    const post = new Post({ content, image, author: req.user.id });
     await post.save();
     return res.status(201).json({ success: true, data: post });
   } catch (error) {
