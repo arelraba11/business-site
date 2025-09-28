@@ -20,7 +20,7 @@ export default function App() {
     <BrowserRouter>
       {/* Persistent navigation bar */}
       <Navbar />
-      <div style={{ padding: 16 }}>
+      <div>
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
