@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiRequest } from "../api";
+import "../styles/Dashboard.css"; 
 
 export default function Dashboard() {
   const [appointments, setAppointments] = useState([]);
@@ -160,161 +161,167 @@ export default function Dashboard() {
   if (error) return <p style={{ color: "red" }}>{error}</p>;
 
   return (
-    <div>
+    <div className="dashboard">
       <h2>Admin Dashboard</h2>
 
       {/* Business Info */}
-      <h3>Business Info</h3>
-      <form onSubmit={handleBusinessInfoSubmit} style={{ marginBottom: "2em" }}>
-        <div>
-          <label>
-            Business Name:{" "}
-            <input
-              type="text"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
-              required
-              style={{ marginRight: "10px" }}
-            />
-          </label>
-          <label>
-            Image URL:{" "}
-            <input
-              type="text"
-              value={businessImage}
-              onChange={(e) => setBusinessImage(e.target.value)}
-              style={{ marginLeft: "10px" }}
-            />
-          </label>
-          <button type="submit" style={{ marginLeft: "10px" }}>
-            Save Info
-          </button>
-        </div>
-        {businessImage && (
-          <div style={{ marginTop: "1em" }}>
-            <img src={businessImage} alt="Business" style={{ maxWidth: "200px" }} />
+      <div className="section">
+        <h3>Business Info</h3>
+        <form onSubmit={handleBusinessInfoSubmit}>
+          <div>
+            <label>
+              Business Name:{" "}
+              <input
+                type="text"
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                required
+              />
+            </label>
+            <label>
+              Image URL:{" "}
+              <input
+                type="text"
+                value={businessImage}
+                onChange={(e) => setBusinessImage(e.target.value)}
+              />
+            </label>
+            <button type="submit">
+              Save Info
+            </button>
           </div>
-        )}
-      </form>
+          {businessImage && (
+            <div>
+              <img src={businessImage} alt="Business" style={{ maxWidth: "200px" }} />
+            </div>
+          )}
+        </form>
+      </div>
 
       {/* Appointments */}
-      <h3>Appointments</h3>
-      <table border="1" cellPadding="8" style={{ width: "100%", marginTop: "1em" }}>
-        <thead>
-          <tr>
-            <th>User</th>
-            <th>Email</th>
-            <th>Service</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {appointments.map((a) => (
-            <tr key={a._id}>
-              <td>{a.client?.username || "N/A"}</td>
-              <td>{a.client?.email || "N/A"}</td>
-              <td>{a.service}</td>
-              <td>{new Date(a.dateTime).toLocaleDateString()}</td>
-              <td>{new Date(a.dateTime).toLocaleTimeString()}</td>
-              <td>{a.status}</td>
-              <td>
-                <button onClick={() => handleUpdate(a._id, "approved")}>
-                  Approve
-                </button>
-                <button
-                  style={{ marginLeft: "10px" }}
-                  onClick={() => handleUpdate(a._id, "rejected")}
-                >
-                  Reject
-                </button>
-              </td>
+      <div className="section">
+        <h3>Appointments</h3>
+        <table cellPadding="8" style={{ width: "100%" }}>
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Email</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {appointments.map((a) => (
+              <tr key={a._id}>
+                <td>{a.client?.username || "N/A"}</td>
+                <td>{a.client?.email || "N/A"}</td>
+                <td>{a.service}</td>
+                <td>{new Date(a.dateTime).toLocaleDateString()}</td>
+                <td>{new Date(a.dateTime).toLocaleTimeString()}</td>
+                <td>{a.status}</td>
+                <td>
+                  <button onClick={() => handleUpdate(a._id, "approved")}>
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => handleUpdate(a._id, "rejected")}
+                    style={{ marginLeft: "10px" }}
+                  >
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {/* Services */}
-      <h3 style={{ marginTop: "2em" }}>Services</h3>
-      <ul>
-        {services.map((s) => (
-          <li key={s._id}>
-            {s.service} – ${s.price}
-            <button
-              style={{ marginLeft: "10px" }}
-              onClick={() => handleDeleteService(s._id)}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="section">
+        <h3>Services</h3>
+        <ul>
+          {services.map((s) => (
+            <li key={s._id}>
+              {s.service} – ${s.price}
+              <button
+                style={{ marginLeft: "10px" }}
+                onClick={() => handleDeleteService(s._id)}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
 
-      <form onSubmit={handleAddService} style={{ marginTop: "1em" }}>
-        <input
-          type="text"
-          placeholder="Service name"
-          value={newService}
-          onChange={(e) => setNewService(e.target.value)}
-          required
-        />
-        <input
-          type="number"
-          placeholder="Price"
-          value={newPrice}
-          onChange={(e) => setNewPrice(e.target.value)}
-          required
-          style={{ marginLeft: "10px" }}
-        />
-        <button type="submit" style={{ marginLeft: "10px" }}>
-          Add Service
-        </button>
-      </form>
-
-      {/* Posts */}
-      <h3>Posts</h3>
-      <form onSubmit={handlePostSubmit} style={{ marginBottom: "1em" }}>
-        <div>
-          <textarea
-            placeholder="Write your post content..."
-            value={postContent}
-            onChange={(e) => setPostContent(e.target.value)}
-            rows={3}
-            style={{ width: "60%", marginRight: "10px" }}
+        <form onSubmit={handleAddService}>
+          <input
+            type="text"
+            placeholder="Service name"
+            value={newService}
+            onChange={(e) => setNewService(e.target.value)}
             required
           />
           <input
-            type="text"
-            placeholder="Image URL (optional)"
-            value={postImage}
-            onChange={(e) => setPostImage(e.target.value)}
-            style={{ width: "30%" }}
+            type="number"
+            placeholder="Price"
+            value={newPrice}
+            onChange={(e) => setNewPrice(e.target.value)}
+            required
+            style={{ marginLeft: "10px" }}
           />
-        </div>
-        <button type="submit" style={{ marginTop: "0.5em" }}>
-          Create Post
-        </button>
-      </form>
-      <ul>
-        {posts.map((post) => (
-          <li key={post._id} style={{ border: "1px solid #ccc", padding: "1em", marginBottom: "1em" }}>
-            <div>{post.content}</div>
-            {post.image && (
-              <div>
-                <img src={post.image} alt="Post" style={{ maxWidth: "200px", marginTop: "0.5em" }} />
-              </div>
-            )}
-            <button
-              onClick={() => handleDeletePost(post._id)}
-              style={{ marginTop: "0.5em" }}
-            >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+          <button type="submit" style={{ marginLeft: "10px" }}>
+            Add Service
+          </button>
+        </form>
+      </div>
+
+      {/* Posts */}
+      <div className="section">
+        <h3>Posts</h3>
+        <form onSubmit={handlePostSubmit}>
+          <div>
+            <textarea
+              placeholder="Write your post content..."
+              value={postContent}
+              onChange={(e) => setPostContent(e.target.value)}
+              rows={3}
+              style={{ width: "60%", marginRight: "10px" }}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Image URL (optional)"
+              value={postImage}
+              onChange={(e) => setPostImage(e.target.value)}
+              style={{ width: "30%" }}
+            />
+          </div>
+          <button type="submit" style={{ marginTop: "0.5em" }}>
+            Create Post
+          </button>
+        </form>
+        <ul>
+          {posts.map((post) => (
+            <li key={post._id} style={{ border: "1px solid #ccc", padding: "1em", marginBottom: "1em" }}>
+              <div>{post.content}</div>
+              {post.image && (
+                <div>
+                  <img src={post.image} alt="Post" style={{ maxWidth: "200px", marginTop: "0.5em" }} />
+                </div>
+              )}
+              <button
+                onClick={() => handleDeletePost(post._id)}
+                style={{ marginTop: "0.5em" }}
+              >
+                Delete
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
