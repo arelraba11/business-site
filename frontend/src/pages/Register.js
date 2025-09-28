@@ -1,4 +1,3 @@
-// src/pages/Register.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../api";
@@ -14,6 +13,10 @@ function Register() {
     e.preventDefault();
     try {
       await apiRequest("/users/register", "POST", { username, email, password });
+
+      // Dispatch event in case Navbar listens for auth changes
+      window.dispatchEvent(new Event("authChange"));
+
       alert("Registration successful! Redirecting to login...");
       navigate("/login");
     } catch (err) {

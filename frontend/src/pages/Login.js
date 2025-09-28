@@ -1,4 +1,3 @@
-// src/pages/Login.js
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../api";
@@ -13,7 +12,13 @@ function Login() {
     e.preventDefault();
     try {
       const data = await apiRequest("/users/login", "POST", { email, password });
+      
+      // Save token
       localStorage.setItem("token", data.token);
+
+      // Dispatch event to update Navbar immediately
+      window.dispatchEvent(new Event("authChange"));
+
       alert("Login successful!");
       navigate("/");
     } catch (err) {
