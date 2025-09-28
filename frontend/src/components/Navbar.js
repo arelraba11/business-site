@@ -6,26 +6,29 @@ import "../styles/Navbar.css";
 export default function Navbar() {
   const navigate = useNavigate();
   const [authed, setAuthed] = useState(!!localStorage.getItem("token"));
+  const [role, setRole] = useState(localStorage.getItem("role"));
 
   useEffect(() => {
-    // Sync auth state when token changes in other tabs (localStorage)
-    const onStorage = () => setAuthed(!!localStorage.getItem("token"));
-    // Custom event used inside app to force auth state refresh
-    const onAuthChange = () => setAuthed(!!localStorage.getItem("token"));
+    // Update state when localStorage changes
+    const syncAuth = () => {
+      setAuthed(!!localStorage.getItem("token"));
+      setRole(localStorage.getItem("role"));
+    };
 
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("authChange", onAuthChange);
+    window.addEventListener("storage", syncAuth);
+    window.addEventListener("authChange", syncAuth);
 
     return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("authChange", onAuthChange);
+      window.removeEventListener("storage", syncAuth);
+      window.removeEventListener("authChange", syncAuth);
     };
   }, []);
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("role"); // clear role as well
     setAuthed(false);
-    // Trigger custom event to notify all components about logout
+    setRole(null);
     window.dispatchEvent(new Event("authChange"));
     navigate("/login");
   }
@@ -33,7 +36,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <div className="navbar-links">
-        {/* NavLink is used here to apply "active" class automatically */}
+        {/* Public links */}
         <NavLink
           to="/"
           className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
@@ -46,6 +49,16 @@ export default function Navbar() {
         >
           My Appointments
         </NavLink>
+
+        {/* Show Dashboard only if admin */}
+        {role === "admin" && (
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) => `nav-link ${isActive ? "active" : ""}`}
+          >
+            Dashboard
+          </NavLink>
+        )}
       </div>
 
       <div className="navbar-auth">
@@ -53,7 +66,6 @@ export default function Navbar() {
           <button onClick={handleLogout}>Logout</button>
         ) : (
           <>
-            {/* Simple links, no need for active state */}
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
           </>

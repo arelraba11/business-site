@@ -15,8 +15,10 @@ export default function Dashboard() {
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState("");
 
+  // State for tabs
+  const [activeTab, setActiveTab] = useState("appointments");
+
   useEffect(() => {
-    // Fetch initial data for dashboard
     fetchAppointments();
     fetchServices();
     fetchBusinessInfo();
@@ -36,7 +38,7 @@ export default function Dashboard() {
     }
   }
 
-  // Fetch services (prices array from business info)
+  // Fetch services
   async function fetchServices() {
     try {
       const data = await apiRequest("/business", "GET");
@@ -46,13 +48,13 @@ export default function Dashboard() {
     }
   }
 
-  // Fetch business info (currently only name is used)
+  // Fetch business info
   async function fetchBusinessInfo() {
     try {
       const data = await apiRequest("/business", "GET");
       setBusinessName(data.name || "");
     } catch {
-      // ignore errors silently
+      // ignore errors
     }
   }
 
@@ -67,7 +69,7 @@ export default function Dashboard() {
     }
   }
 
-  // Update appointment status (approve/reject)
+  // Update appointment status
   async function handleUpdate(id, status) {
     try {
       const token = localStorage.getItem("token");
@@ -117,7 +119,7 @@ export default function Dashboard() {
     }
   }
 
-  // Update business info (name + services)
+  // Update business info
   async function handleBusinessInfoSubmit(e) {
     e.preventDefault();
     try {
@@ -144,7 +146,7 @@ export default function Dashboard() {
       const payload = { content: postContent };
       if (postImage) payload.image = postImage;
       const res = await apiRequest("/posts", "POST", payload, token);
-      const newPost = res.data ? res.data : res; 
+      const newPost = res.data ? res.data : res;
       setPosts((prev) => [newPost, ...prev]);
       setPostContent("");
       setPostImage("");
@@ -174,130 +176,166 @@ export default function Dashboard() {
     <div className="dashboard-container">
       <h2 className="dashboard-title">Admin Dashboard</h2>
 
-      {/* Business Info Section */}
-      <div className="dashboard-section business-info">
-        <h3 className="section-title">Business Info</h3>
-        <form onSubmit={handleBusinessInfoSubmit} className="business-form">
-          <div className="form-row">
+      {/* Tabs */}
+      <div className="dashboard-tabs">
+        <button
+          className={activeTab === "business" ? "active" : ""}
+          onClick={() => setActiveTab("business")}
+        >
+          Business Info
+        </button>
+        <button
+          className={activeTab === "appointments" ? "active" : ""}
+          onClick={() => setActiveTab("appointments")}
+        >
+          Appointments
+        </button>
+        <button
+          className={activeTab === "services" ? "active" : ""}
+          onClick={() => setActiveTab("services")}
+        >
+          Services
+        </button>
+        <button
+          className={activeTab === "posts" ? "active" : ""}
+          onClick={() => setActiveTab("posts")}
+        >
+          Posts
+        </button>
+      </div>
+
+      {/* Business Info */}
+      {activeTab === "business" && (
+        <div className="dashboard-section business-info">
+          <h3 className="section-title">Business Info</h3>
+          <form onSubmit={handleBusinessInfoSubmit} className="business-form">
+            <div className="form-row">
+              <input
+                type="text"
+                placeholder="Business Name"
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                required
+              />
+              <button type="submit" className="btn btn-primary">Save Info</button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Appointments */}
+      {activeTab === "appointments" && (
+        <div className="dashboard-section appointments">
+          <h3 className="section-title">Appointments</h3>
+          <table className="appointments-table">
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Email</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((a) => (
+                <tr key={a._id}>
+                  <td>{a.client?.username || "N/A"}</td>
+                  <td>{a.client?.email || "N/A"}</td>
+                  <td>{a.service}</td>
+                  <td>{new Date(a.dateTime).toLocaleDateString()}</td>
+                  <td>{new Date(a.dateTime).toLocaleTimeString()}</td>
+                  <td>{a.status}</td>
+                  <td className="table-actions">
+                    <button className="btn btn-primary" onClick={() => handleUpdate(a._id, "approved")}>
+                      Approve
+                    </button>
+                    <button className="btn btn-danger" onClick={() => handleUpdate(a._id, "rejected")}>
+                      Reject
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Services */}
+      {activeTab === "services" && (
+        <div className="dashboard-section services">
+          <h3 className="section-title">Services</h3>
+          <ul className="services-list">
+            {services.map((s) => (
+              <li key={s._id || s.service} className="service-item">
+                {s.service} – ${s.price}
+                <button className="btn btn-danger" onClick={() => handleDeleteService(s._id)}>
+                  Delete
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <form onSubmit={handleAddService} className="service-form">
             <input
               type="text"
-              placeholder="Business Name"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
+              placeholder="Service name"
+              value={newService}
+              onChange={(e) => setNewService(e.target.value)}
               required
             />
-            <button type="submit" className="btn btn-primary">Save Info</button>
-          </div>
-        </form>
-      </div>
+            <input
+              type="number"
+              placeholder="Price"
+              value={newPrice}
+              onChange={(e) => setNewPrice(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn btn-primary">Add Service</button>
+          </form>
+        </div>
+      )}
 
-      {/* Appointments Section */}
-      <div className="dashboard-section appointments">
-        <h3 className="section-title">Appointments</h3>
-        <table className="appointments-table">
-          <thead>
-            <tr>
-              <th>User</th>
-              <th>Email</th>
-              <th>Service</th>
-              <th>Date</th>
-              <th>Time</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((a) => (
-              <tr key={a._id}>
-                <td>{a.client?.username || "N/A"}</td>
-                <td>{a.client?.email || "N/A"}</td>
-                <td>{a.service}</td>
-                <td>{new Date(a.dateTime).toLocaleDateString()}</td>
-                <td>{new Date(a.dateTime).toLocaleTimeString()}</td>
-                <td>{a.status}</td>
-                <td className="table-actions">
-                  <button className="btn btn-primary" onClick={() => handleUpdate(a._id, "approved")}>
-                    Approve
-                  </button>
-                  <button className="btn btn-danger" onClick={() => handleUpdate(a._id, "rejected")}>
-                    Reject
-                  </button>
-                </td>
-              </tr>
+      {/* Posts */}
+      {activeTab === "posts" && (
+        <div className="dashboard-section posts">
+          <h3 className="section-title">Posts</h3>
+          <form onSubmit={handlePostSubmit} className="post-form">
+            <textarea
+              placeholder="Write your post content..."
+              value={postContent}
+              onChange={(e) => setPostContent(e.target.value)}
+              rows={3}
+              required
+            />
+            <input
+              type="text"
+              placeholder="Image URL (optional)"
+              value={postImage}
+              onChange={(e) => setPostImage(e.target.value)}
+            />
+            <button type="submit" className="btn btn-primary">Create Post</button>
+          </form>
+
+          <ul className="posts-list">
+            {posts.map((post) => (
+              <li key={post._id || post.content} className="post-item">
+                <div className="post-content">{post.content}</div>
+                {post.image && (
+                  <div className="post-image">
+                    <img src={post.image} alt="Post" />
+                  </div>
+                )}
+                <button className="btn btn-danger" onClick={() => handleDeletePost(post._id)}>
+                  Delete
+                </button>
+              </li>
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Services Section */}
-      <div className="dashboard-section services">
-        <h3 className="section-title">Services</h3>
-        <ul className="services-list">
-          {services.map((s) => (
-            <li key={s._id || s.service} className="service-item">
-              {s.service} – ${s.price}
-              <button className="btn btn-danger" onClick={() => handleDeleteService(s._id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-
-        <form onSubmit={handleAddService} className="service-form">
-          <input
-            type="text"
-            placeholder="Service name"
-            value={newService}
-            onChange={(e) => setNewService(e.target.value)}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={newPrice}
-            onChange={(e) => setNewPrice(e.target.value)}
-            required
-          />
-          <button type="submit" className="btn btn-primary">Add Service</button>
-        </form>
-      </div>
-
-      {/* Posts Section */}
-      <div className="dashboard-section posts">
-        <h3 className="section-title">Posts</h3>
-        <form onSubmit={handlePostSubmit} className="post-form">
-          <textarea
-            placeholder="Write your post content..."
-            value={postContent}
-            onChange={(e) => setPostContent(e.target.value)}
-            rows={3}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Image URL (optional)"
-            value={postImage}
-            onChange={(e) => setPostImage(e.target.value)}
-          />
-          <button type="submit" className="btn btn-primary">Create Post</button>
-        </form>
-
-        <ul className="posts-list">
-          {posts.map((post) => (
-            <li key={post._id || post.content} className="post-item">
-              <div className="post-content">{post.content}</div>
-              {post.image && (
-                <div className="post-image">
-                  <img src={post.image} alt="Post" />
-                </div>
-              )}
-              <button className="btn btn-danger" onClick={() => handleDeletePost(post._id)}>
-                Delete
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

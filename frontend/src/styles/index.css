@@ -39,3 +39,27 @@ a {
 a:hover {
   opacity: 0.85; /* Subtle hover effect */
 }
+
+/* Global form inputs & textareas (dark mode) */
+input,
+textarea,
+select {
+  background: #111;
+  color: var(--color-text);
+  border: 1px solid #333;
+  border-radius: var(--radius, 6px);
+  padding: 0.8rem;
+  font-size: 1rem;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #888;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}

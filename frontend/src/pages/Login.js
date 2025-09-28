@@ -11,22 +11,22 @@ function Login() {
 
   // Handle login form submission
   async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      // Send login request to backend
-      const data = await apiRequest("/users/login", "POST", { email, password });
+  e.preventDefault();
+  try {
+    const data = await apiRequest("/users/login", "POST", { email, password });
 
-      // Save token in localStorage to persist authentication
-      localStorage.setItem("token", data.token);
-      // Trigger custom event to update auth state across app
-      window.dispatchEvent(new Event("authChange"));
+    // Save token and role in localStorage
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.user.role);
 
-      alert("Login successful!");
-      navigate("/"); // redirect to homepage
-    } catch (err) {
-      setError(err.message); // show error if login fails
-    }
+    window.dispatchEvent(new Event("authChange"));
+
+    alert("Login successful!");
+    navigate("/");
+  } catch (err) {
+    setError(err.message);
   }
+}
 
   return (
     <div className="login-container">
