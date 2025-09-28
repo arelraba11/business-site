@@ -5,9 +5,6 @@ const businessInfoSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  mainImage: {
-    type: String // URL to the main image representing the business
-  },
   socialLinks: {
     facebook: String, // Facebook page URL
     instagram: String, // Instagram profile URL

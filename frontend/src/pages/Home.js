@@ -44,7 +44,7 @@ export default function Home() {
   return (
     <div className="home-container">
       {/* Hero Section */}
-      <div className="hero-section" style={{ backgroundImage: `url(${businessImage})` }}>
+      <div className="hero-section" style={{ backgroundImage: "url(/heroPage.jpg)" }}>
         <div className="hero-overlay">
           <h1>{businessName}</h1>
           <button onClick={handleBookAppointment} className="btn btn-primary">

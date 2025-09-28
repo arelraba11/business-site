@@ -38,13 +38,18 @@ export const deleteServiceFromBusiness = async (req, res) => {
 export const createOrUpdateBusinessInfo = async (req, res) => {
   try {
     let info = await BusinessInfo.findOne();
+
     if (info) {
-      // Update existing document with new data.
-      info.set(req.body);
+      // Update only the fields that are provided in the request
+      if (req.body.name) info.name = req.body.name;
+      if (req.body.prices) info.prices = req.body.prices;
+      if (req.body.socialLinks) info.socialLinks = req.body.socialLinks;
+      if (req.body.openingHours) info.openingHours = req.body.openingHours;
+
       await info.save();
       return res.json(info);
     } else {
-      // If no document exists, create a new one.
+      // Create a new business if it doesn't exist
       const newBusiness = new BusinessInfo(req.body);
       await newBusiness.save();
       return res.json(newBusiness);

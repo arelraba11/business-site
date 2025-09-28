@@ -10,7 +10,6 @@ export default function Dashboard() {
   const [newService, setNewService] = useState("");
   const [newPrice, setNewPrice] = useState("");
   const [businessName, setBusinessName] = useState("");
-  const [businessImage, setBusinessImage] = useState("");
   const [posts, setPosts] = useState([]);
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState("");
@@ -47,7 +46,6 @@ export default function Dashboard() {
     try {
       const data = await apiRequest("/business", "GET");
       setBusinessName(data.name || "");
-      setBusinessImage(data.image || "");
     } catch {
       // ignore
     }
@@ -117,11 +115,10 @@ export default function Dashboard() {
       const updated = await apiRequest(
         "/business",
         "POST",
-        { name: businessName, image: businessImage, prices: services },
+        { name: businessName, prices: services },
         token
       );
       setBusinessName(updated.name || "");
-      setBusinessImage(updated.image || "");
       setServices(updated.prices || []);
       alert("Business info updated successfully!");
     } catch {
@@ -136,7 +133,7 @@ export default function Dashboard() {
     const payload = { content: postContent };
     if (postImage) payload.image = postImage;
     const res = await apiRequest("/posts", "POST", payload, token);
-    const newPost = res.data ? res.data : res; // כדי להתאים ל־response שלך
+    const newPost = res.data ? res.data : res; 
     setPosts((prev) => [newPost, ...prev]);
     setPostContent("");
     setPostImage("");
@@ -176,19 +173,8 @@ export default function Dashboard() {
               onChange={(e) => setBusinessName(e.target.value)}
               required
             />
-            <input
-              type="text"
-              placeholder="Image URL"
-              value={businessImage}
-              onChange={(e) => setBusinessImage(e.target.value)}
-            />
             <button type="submit" className="btn btn-primary">Save Info</button>
           </div>
-          {businessImage && (
-            <div className="business-preview">
-              <img src={businessImage} alt="Business" />
-            </div>
-          )}
         </form>
       </div>
 
