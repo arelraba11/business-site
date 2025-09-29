@@ -1,14 +1,42 @@
 import Appointment from "../models/Appointment.js";
+import BusinessInfo from "../models/BusinessInfo.js";
 
 // Create appointment (user)
 export const createAppointment = async (req, res) => {
   try {
     const { service, dateTime } = req.body;
+    const date = new Date(dateTime);
+
+    if (date < new Date()) {
+      return res.status(400).json({ message: "Cannot book an appointment in the past" });
+    }
+
+    const business = await BusinessInfo.findOne();
+    if (!business || !business.openingHours) {
+      return res.status(400).json({ message: "Business hours not set" });
+    }
+
+    const daysOfWeek = [
+      "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    ];
+    const dayName = daysOfWeek[date.getDay()];
+    const hours = business.openingHours.get(dayName);
+
+    if (!hours || !hours.includes("-")) {
+      return res.status(400).json({ message: "Business closed on this day" });
+    }
+
+    const [open, close] = hours.split("-");
+    const selectedTime = date.toTimeString().slice(0, 5); // "HH:MM"
+
+    if (selectedTime < open || selectedTime > close) {
+      return res.status(400).json({ message: "Selected time is outside business hours" });
+    }
 
     let appointment = new Appointment({
       client: req.user.id,
       service,
-      dateTime,
+      dateTime: date,
     });
 
     await appointment.save();
