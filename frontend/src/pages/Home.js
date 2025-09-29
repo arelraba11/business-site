@@ -1,34 +1,32 @@
-// pages/Home.js
 import React, { useEffect, useState } from "react";
 import "../styles/Pages.css";
+import "../styles/Home.css";
+
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../api";
+import HeroSection from "../components/HeroSection";
+import PostsSection from "../components/PostsSection";
 
 export default function Home() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token"); // check if user is logged in
+  const token = localStorage.getItem("token");
   const [businessName, setBusinessName] = useState("");
-  const [businessImage, setBusinessImage] = useState("");
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    // Load business info and posts on page load
     fetchBusiness();
     fetchPosts();
   }, []);
 
-  // Fetch business info (name + optional image)
   async function fetchBusiness() {
     try {
       const data = await apiRequest("/business", "GET");
       setBusinessName(data.name || "Business Name");
-      setBusinessImage(data.image || "https://via.placeholder.com/800x400");
     } catch {
       setBusinessName("Business Name");
     }
   }
 
-  // Fetch posts from backend
   async function fetchPosts() {
     try {
       const res = await apiRequest("/posts", "GET");
@@ -39,7 +37,6 @@ export default function Home() {
     }
   }
 
-  // Redirect user to appointment booking
   const handleBookAppointment = () => {
     if (!token) navigate("/login");
     else navigate("/appointments");
@@ -47,30 +44,8 @@ export default function Home() {
 
   return (
     <div className="home-container">
-      {/* Hero Section with static background image */}
-      <div className="hero-section">
-  <img src="/heroPage.jpg" alt="Hero" className="hero-image" />
-  <div className="hero-overlay">
-    <h1>{businessName}</h1>
-    <button onClick={handleBookAppointment} className="btn btn-primary">
-      Book Appointment
-    </button>
-  </div>
-</div>
-
-      {/* Posts Section */}
-      <div className="home-posts">
-        <h2>Our Posts</h2>
-        <div className="posts-grid">
-          {posts.map((post) => (
-            <div key={post._id} className="post-card">
-              {post.image && <img src={post.image} alt="Post" />}
-              <p>{post.content}</p>
-            </div>
-          ))}
-          {posts.length === 0 && <p>No posts available</p>}
-        </div>
-      </div>
+      <HeroSection businessName={businessName} onBook={handleBookAppointment} />
+      <PostsSection posts={posts} />
     </div>
   );
 }
