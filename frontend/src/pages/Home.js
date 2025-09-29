@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api";
 import "../styles/Pages.css";
 import "../styles/Home.css";
 
-import { useNavigate } from "react-router-dom";
-import { apiRequest } from "../api";
 import HeroSection from "../components/HeroSection";
 import PostsSection from "../components/PostsSection";
 
 export default function Home() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  const [businessName, setBusinessName] = useState("");
-  const [posts, setPosts] = useState([]);
 
+  // State
+  const [businessName, setBusinessName] = useState("Business Name");
+  const [posts, setPosts] = useState([]);
+  const [error, setError] = useState("");
+
+  /* ----------------- FETCH DATA ----------------- */
   useEffect(() => {
     fetchBusiness();
     fetchPosts();
@@ -31,21 +34,29 @@ export default function Home() {
     try {
       const res = await apiRequest("/posts", "GET");
       setPosts(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
-      console.error("Failed to load posts", err);
+    } catch {
+      setError("Failed to load posts");
       setPosts([]);
     }
   }
 
+  /* ----------------- HANDLERS ----------------- */
   const handleBookAppointment = () => {
-    if (!token) navigate("/login");
-    else navigate("/appointments");
+    const token = localStorage.getItem("token");
+    navigate(token ? "/appointments" : "/login");
   };
 
+  /* ----------------- UI ----------------- */
   return (
     <div className="home-container">
       <HeroSection businessName={businessName} onBook={handleBookAppointment} />
-      <PostsSection posts={posts} />
+
+      {error && <p className="error">{error}</p>}
+      {posts.length === 0 ? (
+        <p className="no-posts">No posts available</p>
+      ) : (
+        <PostsSection posts={posts} />
+      )}
     </div>
   );
 }

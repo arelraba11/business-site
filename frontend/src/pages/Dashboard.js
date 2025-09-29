@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { apiRequest } from "../api";
+import { generateAllTimeOptions } from "../utils/timeUtils";
 import "../styles/Pages.css";
 
 // Components
@@ -10,92 +11,92 @@ import ServicesSection from "../components/dashboard/ServicesSection";
 import PostsSection from "../components/dashboard/PostsSection";
 
 export default function Dashboard() {
-  // State for appointments, services, business info, and posts
+  const token = localStorage.getItem("token");
+
+  // State
   const [appointments, setAppointments] = useState([]);
   const [services, setServices] = useState([]);
   const [openingHours, setOpeningHours] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [newService, setNewService] = useState("");
-  const [newPrice, setNewPrice] = useState("");
   const [businessName, setBusinessName] = useState("");
   const [posts, setPosts] = useState([]);
+
+  // Form states
+  const [newService, setNewService] = useState("");
+  const [newPrice, setNewPrice] = useState("");
   const [postContent, setPostContent] = useState("");
   const [postImage, setPostImage] = useState("");
 
-  // State for tabs
+  // UI states
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [activeTab, setActiveTab] = useState("appointments");
 
   useEffect(() => {
-    fetchAppointments();
-    fetchServices();
-    fetchBusinessInfo();
-    fetchPosts();
+    Promise.all([
+      fetchAppointments(),
+      fetchServices(),
+      fetchBusinessInfo(),
+      fetchPosts()
+    ]).finally(() => setLoading(false));
   }, []);
 
-  // Fetch all appointments
+  /* ----------------- FETCH DATA ----------------- */
   async function fetchAppointments() {
     try {
-      const token = localStorage.getItem("token");
       const data = await apiRequest("/appointments", "GET", null, token);
       setAppointments(data);
-    } catch {
+    } catch (err) {
+      console.error("Failed to load appointments", err);
       setError("Failed to load appointments");
-    } finally {
-      setLoading(false);
     }
   }
 
-  // Fetch services
   async function fetchServices() {
     try {
       const data = await apiRequest("/business", "GET");
       setServices(data.prices || []);
-    } catch {
-      console.error("Failed to load services");
+    } catch (err) {
+      console.error("Failed to load services", err);
+      setError("Failed to load services");
     }
   }
 
-  // Fetch business info
   async function fetchBusinessInfo() {
     try {
       const data = await apiRequest("/business", "GET");
       setBusinessName(data.name || "");
       setOpeningHours(data.openingHours || {});
-    } catch {
-      // ignore errors
+    } catch (err) {
+      console.error("Failed to load business info", err);
+      setError("Failed to load business info");
     }
   }
 
-  // Fetch posts
   async function fetchPosts() {
     try {
       const res = await apiRequest("/posts", "GET");
       setPosts(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Failed to load posts", err);
-      setPosts([]);
+      setError("Failed to load posts");
     }
   }
 
-  // Update appointment status
+  /* ----------------- HANDLERS ----------------- */
   async function handleUpdate(id, status) {
     try {
-      const token = localStorage.getItem("token");
       await apiRequest(`/appointments/${id}`, "PATCH", { status }, token);
       setAppointments((prev) =>
         prev.map((a) => (a._id === id ? { ...a, status } : a))
       );
-    } catch {
-      alert("Failed to update appointment");
+    } catch (err) {
+      console.error("Failed to update appointment", err);
     }
   }
 
-  // Add a new service
   async function handleAddService(e) {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const updated = await apiRequest(
         "/business",
         "POST",
@@ -105,16 +106,13 @@ export default function Dashboard() {
       setServices(updated.prices);
       setNewService("");
       setNewPrice("");
-      alert("Service added successfully!");
-    } catch {
-      alert("Failed to add service");
+    } catch (err) {
+      console.error("Failed to add service", err);
     }
   }
 
-  // Delete a service
   async function handleDeleteService(serviceId) {
     try {
-      const token = localStorage.getItem("token");
       const updated = await apiRequest(
         `/business/services/${serviceId}`,
         "DELETE",
@@ -122,17 +120,14 @@ export default function Dashboard() {
         token
       );
       setServices(updated.prices);
-      alert("Service deleted successfully");
-    } catch {
-      alert("Failed to delete service");
+    } catch (err) {
+      console.error("Failed to delete service", err);
     }
   }
 
-  // Update business info
   async function handleBusinessInfoSubmit(e) {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const updated = await apiRequest(
         "/business",
         "POST",
@@ -142,69 +137,44 @@ export default function Dashboard() {
       setBusinessName(updated.name || "");
       setServices(updated.prices || []);
       setOpeningHours(updated.openingHours || {});
-      alert("Business info updated successfully!");
     } catch (err) {
-      alert("Failed to update business info");
-      console.error(err);
+      console.error("Failed to update business info", err);
     }
   }
 
-  // Create a new post
   async function handlePostSubmit(e) {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      const payload = { content: postContent };
-      if (postImage) payload.image = postImage;
+      const payload = { content: postContent, image: postImage || undefined };
       const res = await apiRequest("/posts", "POST", payload, token);
       const newPost = res.data ? res.data : res;
       setPosts((prev) => [newPost, ...prev]);
       setPostContent("");
       setPostImage("");
-      alert("Post created successfully!");
-    } catch {
-      alert("Failed to create post");
+    } catch (err) {
+      console.error("Failed to create post", err);
     }
   }
 
-  // Delete a post
   async function handleDeletePost(id) {
     try {
-      const token = localStorage.getItem("token");
       await apiRequest(`/posts/${id}`, "DELETE", null, token);
       setPosts((prev) => prev.filter((p) => p._id !== id));
-      alert("Post deleted successfully");
-    } catch {
-      alert("Failed to delete post");
+    } catch (err) {
+      console.error("Failed to delete post", err);
     }
   }
 
-  // Loading/error states
+  /* ----------------- UI ----------------- */
   if (loading) return <p>Loading...</p>;
   if (error) return <p style={{ color: "red" }}>{error}</p>;
-
-  // Generate time options (00:00, 00:30, 01:00 ... 23:30)
-  function generateTimeOptions() {
-    const times = [];
-    for (let h = 0; h < 24; h++) {
-      for (let m of [0, 30]) {
-        const hour = h.toString().padStart(2, "0");
-        const minute = m.toString().padStart(2, "0");
-        times.push(`${hour}:${minute}`);
-      }
-    }
-    return times;
-  }
-  const timeOptions = generateTimeOptions();
 
   return (
     <div className="dashboard-container">
       <h2 className="dashboard-title">Admin Dashboard</h2>
 
-      {/* Tabs */}
       <DashboardTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Business Info */}
       {activeTab === "business" && (
         <BusinessInfo
           businessName={businessName}
@@ -212,11 +182,10 @@ export default function Dashboard() {
           openingHours={openingHours}
           setOpeningHours={setOpeningHours}
           handleBusinessInfoSubmit={handleBusinessInfoSubmit}
-          timeOptions={timeOptions}
+          timeOptions={generateAllTimeOptions()}
         />
       )}
 
-      {/* Appointments */}
       {activeTab === "appointments" && (
         <AppointmentsSection
           appointments={appointments}
@@ -224,7 +193,6 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Services */}
       {activeTab === "services" && (
         <ServicesSection
           services={services}
@@ -237,7 +205,6 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Posts */}
       {activeTab === "posts" && (
         <PostsSection
           posts={posts}

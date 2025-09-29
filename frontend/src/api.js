@@ -1,31 +1,44 @@
-// Base URL for backend API
-const API_URL = "http://localhost:4000/api";
+// Base URL for backend API (use .env for flexibility)
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
 
 /**
  * Generic helper for making API requests
- * Centralizes fetch logic with JSON and token handling
+ * Handles JSON, tokens, and error parsing consistently
  *
  * @param {string} endpoint - e.g. "/users/login"
  * @param {string} [method="GET"] - HTTP method
- * @param {Object|null} [body=null] - Request payload
+ * @param {Object|FormData|null} [body=null] - Request payload
  * @param {string|null} [token=null] - Optional Bearer token
- * @returns {Promise<any>} - Parsed JSON response
+ * @returns {Promise<any>} - Parsed response data
  */
 export async function apiRequest(endpoint, method = "GET", body = null, token = null) {
-  const headers = { "Content-Type": "application/json" };
+  const headers = {};
+  if (!(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
   if (token) headers["Authorization"] = `Bearer ${token}`;
 
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    method,
-    headers,
-    body: body ? JSON.stringify(body) : null,
-  });
-
-  // Throw error with message provided by server if response is not ok
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Request failed");
+  let response;
+  try {
+    response = await fetch(`${API_URL}${endpoint}`, {
+      method,
+      headers,
+      body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : null,
+    });
+  } catch (networkError) {
+    throw new Error("Network error – failed to reach server");
   }
 
-  return response.json(); // Return parsed JSON payload
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    data = { message: await response.text() }; // fallback for non-JSON errors
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || `Request failed with status ${response.status}`);
+  }
+
+  return data;
 }
