@@ -1,11 +1,5 @@
 import BusinessInfo from "../models/BusinessInfo.js";
-
-// Validate opening hours format: "HH:MM-HH:MM" or empty
-function isValidTimeRange(value) {
-  if (!value) return true; // allow empty/Closed
-  const regex = /^([01]\d|2[0-3]):(00|30)-([01]\d|2[0-3]):(00|30)$/;
-  return regex.test(value);
-}
+import { isValidTimeRange } from "../utils/timeUtils.js";
 
 // Get business info (single document)
 export const getBusinessInfo = async (req, res) => {
