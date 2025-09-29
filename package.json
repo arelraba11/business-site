@@ -1,26 +1,12 @@
 {
-  "name": "business-site",
-  "version": "1.0.0",
-  "description": "Business website with admin dashboard and Google Calendar integration",
-  "main": "server.js",
-  "type": "module",
+  "name": "business-site-root",
+  "private": true,
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "keywords": [],
-  "author": "Arel Raba",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^3.0.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.3"
+    "dev": "concurrently \"npm run dev --prefix backend\" \"npm start --prefix frontend\"",
+    "backend": "npm run dev --prefix backend",
+    "frontend": "npm start --prefix frontend"
   },
   "devDependencies": {
-    "nodemon": "^3.1.4"
+    "concurrently": "^9.0.0"
   }
 }
