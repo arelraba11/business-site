@@ -1,31 +1,36 @@
-# Business Site – Backend
+# Business Site – Fullstack
 
-A Node.js + Express backend for a small business management system.  
-Includes user authentication, role-based authorization, posts management, appointments system, and business details.
+A fullstack project containing a **Node.js + Express backend** and a **React frontend** for small business management.  
+Includes user authentication, role-based authorization, posts management, appointments system, business details, and a React admin dashboard with multiple sections.
 
 ---
 
 ## Features
-- **User Management**  
-  - Register new users (default: `client` role).  
-  - Login with JWT authentication.  
-  - Role-based access control (`client` vs `admin`).  
+- **Backend**  
+  - User Management  
+    - Register new users (default: `client` role).  
+    - Login with JWT authentication.  
+    - Role-based access control (`client` vs `admin`).  
+  - Posts  
+    - Admins can create and delete posts.  
+    - Everyone can view posts.  
+  - Appointments  
+    - Clients can create, view, and cancel their own appointments.  
+    - Admins can view all appointments and approve/reject them.  
+  - Business Info  
+    - Admins can set/update business services & prices.  
+    - Clients can only view business info.  
 
-- **Posts**  
-  - Admins can create and delete posts.  
-  - Everyone can view posts.  
-
-- **Appointments**  
-  - Clients can create, view, and cancel their own appointments.  
-  - Admins can view all appointments and approve/reject them.  
-
-- **Business Info**  
-  - Admins can set/update business services & prices.  
-  - Clients can only view business info.  
+- **Frontend**  
+  - React Admin Dashboard with tabs (Business Info, Appointments, Services, Posts).  
+  - Clients can view business info, create appointments, and see posts.  
+  - Admins can manage services, business info, approve/reject appointments, and create/delete posts.
 
 ---
 
 ## Project Structure
+
+### Backend
 ```
 business-site/
 │── controllers/   # Logic for each resource
@@ -35,17 +40,36 @@ business-site/
 │── server.js      # App entry point
 ```
 
+### Frontend
+```
+frontend/
+│── src/
+    │── components/   # Reusable React components
+    │── pages/        # Dashboard and page views
+    │── styles/       # CSS files
+│── public/
+│── package.json
+```
+
 ---
 
 ## Tech Stack
-- Node.js  
-- Express.js  
-- MongoDB + Mongoose  
-- JWT (JSON Web Token) for authentication  
+- **Backend**  
+  - Node.js  
+  - Express.js  
+  - MongoDB + Mongoose  
+  - JWT (JSON Web Token) for authentication  
+
+- **Frontend**  
+  - React.js  
+  - CSS  
+  - Axios (or fetch/apiRequest wrapper) for API calls  
 
 ---
 
 ## API Endpoints
+
+The frontend interacts with the backend API endpoints using an `apiRequest` utility or similar Axios/fetch wrapper to handle requests and authentication tokens.
 
 ### Users
 - `POST /api/users/register` → Register a new user  
@@ -69,7 +93,15 @@ business-site/
 
 ---
 
+## Screenshots / UI Overview
+
+*Add screenshots or UI overview images here to showcase the React dashboard and main features.*
+
+---
+
 ## Getting Started
+
+### Backend
 1. Clone the repository:  
    ```bash
    git clone https://github.com/arelraba11/business-site.git
@@ -93,13 +125,23 @@ business-site/
    npm start
    ```
 
+### Frontend
+1. Navigate to the frontend directory:  
+   ```bash
+   cd frontend
+   ```
+
+2. Install dependencies:  
+   ```bash
+   npm install
+   ```
+
+3. Run the React development server:  
+   ```bash
+   npm start
+   ```
+
 ---
 
 ## Status
-All backend functionality tested via `curl`:  
-- User login/register  
-- Post creation/deletion  
-- Appointment booking/approval/cancellation  
-- Business info update & retrieval  
-
-The backend is **stable and production-ready**.
+Both backend and frontend tested locally. Stable for small business usage.
