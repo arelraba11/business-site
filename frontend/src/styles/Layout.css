@@ -1,0 +1,14 @@
+/* Make layout take full height of viewport */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Main content expands between navbar and footer */
+.layout-main {
+  flex: 1;
+  padding: 20px;
+}
